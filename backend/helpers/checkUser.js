@@ -15,7 +15,7 @@ async function checkUser(email,phone){
 
 
         logger.debug(`checkUser => Found user by ${mathchedField}: ${JSON.stringify({
-             email: user.email,
+            email: user.email,
             phone: user.phone,
         })}`);
 
