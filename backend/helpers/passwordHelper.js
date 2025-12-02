@@ -2,7 +2,7 @@ const bcrypt=require("bcrypt")
 
 
 async function hashPassword(password) {
-    return bcrypt.hash(password,process.env.SALT_ROUNDS)
+    return bcrypt.hash(password,Number(process.env.SALT_ROUNDS))
 }
 
 async function verifyPassword(password,hashedPassword) {

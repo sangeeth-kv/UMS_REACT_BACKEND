@@ -6,11 +6,12 @@ import { Eye, EyeOff } from "lucide-react";
 import FormInputField from "../../../components/InputField/FormInputField";
 import AuthFormButton from "../../../components/Buttons/AuthFormButton";
 import AuthNavLink from "../../../components/NavLink/AuthNavLink";
-import signupSchema from "../../../validation/signupSchema/signupSchema";
+import signupSchema from "../../../validation/schemas/signupSchema";
 import signupUser from "../../../services/userSignup";
 import { Toaster,toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { API_ROUTES } from "../../../api/API_ROUTES";
+import log from "../../../utils/logger"
 
 
 function UserSignup() {
@@ -23,6 +24,7 @@ function UserSignup() {
   
 
   const onSubmit=async(data)=>{
+    log.debug("onSubmit hitted in signup ")
     if(clicked)return;
     setClicked(true)
     try {
@@ -41,7 +43,7 @@ function UserSignup() {
         }
       }
     } catch (error) {
-      console.error(error);
+      log.error("error in Signup : ",error)
       toast.error("Something went wrong!");
     } finally{
       setClicked(false)

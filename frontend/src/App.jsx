@@ -7,15 +7,16 @@ import ToggleButton from "./features/toggleMode/toggleButton"
 import { useEffect } from "react"
 import UserSignin from "./pages/users/userLogin/UserSignin"
 import { Toaster } from "react-hot-toast"
+import log from "./utils/logger"
 
 function App() {
 
   const mode=useSelector((state)=>state.toggle.mode)
-  console.log(mode)
+  log.debug("mode : ",mode)
 
   useEffect(() => {
   document.documentElement.classList.toggle("dark", mode === "dark");
-}, [mode]);
+  }, [mode]);
 
 
   return (

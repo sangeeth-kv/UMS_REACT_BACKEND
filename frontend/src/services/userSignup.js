@@ -1,5 +1,6 @@
 import axiosInstance from "../api/axiosInstance";
 import { API_ROUTES } from "../api/API_ROUTES";
+import log from "../utils/logger"
 
 const signupUser = async (userData) => {
   try {
@@ -7,7 +8,7 @@ const signupUser = async (userData) => {
     // console.log("Response:", response.data);
     return response.data;
   } catch (error) {
-    console.log("Signup error:", error);
+    log.warn("Signup error:", error);
     if(error.response){
         return error.response.data
     }else{
