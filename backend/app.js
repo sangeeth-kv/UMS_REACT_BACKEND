@@ -1,6 +1,7 @@
 require("dotenv").config();
 const express=require("express")
 const app=express()
+const cookieparser=require("cookie-parser")
 const cors=require("cors")
 const errorHandler=require("./Middlewares/ErrorHandler")
 const userRoutes=require("./routes/userRoutes")
@@ -15,6 +16,7 @@ app.use(cors({
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+app.use(cookieparser())
 
 app.use(requestLogger)
 app.use("/",userRoutes)
