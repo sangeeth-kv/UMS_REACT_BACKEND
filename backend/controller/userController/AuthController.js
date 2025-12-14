@@ -6,6 +6,12 @@ const saveUser = require("../../helpers/saveUser");
 const getUser=require("../../helpers/getUser");
 const { verifyPassword } = require("../../helpers/passwordHelper");
 const {createAccessToken,createRefreshToken}=require("../../utils/tokens")
+const failedResponse=require("../../helpers/responses/failerResponse")
+const successResponse=require("../../helpers/responses/successResponse")
+const checkIsBlocked=require("../../helpers/checkIsBlocked")
+const setUserDetails=require("../../helpers/setUserDetails");
+
+
 
 
 
@@ -17,16 +23,28 @@ const authController={
 
             const isUser=await getUser(req.body.email)
 
-            if(!isUser.success)return res.status(STATUS_CODES.NOT_FOUND).json({success:false,errors:[{path:"email",message:isUser.message}]})
+            if(!isUser.success){
+                return failedResponse(STATUS_CODES.NOT_FOUND,[{path:"email",message:isUser.message}],"No user found",res)
+            }
 
-            const isPassword=await verifyPassword(req.body.password,isUser.user.password)
+            const isBlockedUser=await checkIsBlocked(isUser.user)
+
+            if(isBlockedUser){
+                return failedResponse(STATUS_CODES.UNAUTHORIZED,[{path:"email",message:"User with this email is blocked"}],"Blocked by admin",res)
+            }
+
+            const isPassword=await verifyPassword(req.body.password,isUser.user.password)            
 
             if(!isPassword){
-                return res.status(STATUS_CODES.UNAUTHORIZED).json({success:false,errors:[{path:"password",message:"Incorrect password"}]})
+                return failedResponse(STATUS_CODES.UNAUTHORIZED,[{path:"password",message:"Incorrect password"}],"Incorrect password",res)
             }
 
             const refreshToken=await createRefreshToken(isUser.user)
             const accessToken=await createAccessToken(isUser.user)
+
+            logger.debug(`refresh token in sign in auth : ${refreshToken}`)
+
+            const user=setUserDetails(isUser.user)
 
 
             res.cookie('refreshToken',refreshToken,{
@@ -36,7 +54,8 @@ const authController={
                 maxAge:7 * 24 * 60 * 60 * 1000,
             })
 
-            return res.status(STATUS_CODES.OK).json({success:true,accessToken,message:"Successfully signin"})
+            // return res.status(STATUS_CODES.OK).json({success:true,accessToken,message:"Successfully signin"})
+            return successResponse(STATUS_CODES.OK,{accessToken,user},"Successfully signin",res)
 
         } catch (error) {
             logger.error(`error in verifySignin : ${error}`)
@@ -65,7 +84,8 @@ const authController={
             next(error)
 
         }
-    }
+    },
+    
 }
 
 

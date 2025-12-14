@@ -1,0 +1,142 @@
+import React,{useState} from 'react'
+import {Link} from "react-router-dom";
+import ToggleButton from '../../features/toggleMode/toggleButton';
+
+export default function Headers() {
+    const [open, setOpen] = useState(false);
+
+    const onLogout=()=>{
+        console.log("logout clicked")
+    }
+
+  return (
+     <header className="bg-white dark:bg-gray-800 shadow-sm">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between h-16 items-center">
+
+          {/* Desktop nav */}
+          <nav className="hidden md:flex items-center space-x-6">
+            <Link
+              to="/dashboard"
+              className="text-gray-600 hover:text-indigo-600 dark:text-gray-300 dark:hover:text-indigo-400 px-2 py-1 rounded"
+            >
+              Dashboard
+            </Link>
+
+            <Link
+              to="/users"
+              className="text-gray-600 hover:text-indigo-600 dark:text-gray-300 dark:hover:text-indigo-400 px-2 py-1 rounded"
+            >
+              Users
+            </Link>
+
+            <Link
+              to="/chat"
+              className="text-gray-600 hover:text-indigo-600 dark:text-gray-300 dark:hover:text-indigo-400 px-2 py-1 rounded"
+            >
+              Chat
+            </Link>
+
+            <Link
+              to="/about"
+              className="text-gray-600 hover:text-indigo-600 dark:text-gray-300 dark:hover:text-indigo-400 px-2 py-1 rounded"
+            >
+              About
+            </Link>
+
+            <button
+              onClick={onLogout}
+              className="ml-3 px-3 py-1 bg-red-50 text-red-600 hover:bg-red-100 rounded-md text-sm dark:bg-red-600 dark:text-white dark:hover:bg-red-500"
+            >
+              Logout
+            </button>
+          </nav>
+
+          {/* Mobile: hamburger */}
+          <div className="md:hidden flex items-center">
+            <button
+              onClick={() => setOpen((v) => !v)}
+              aria-label="Toggle menu"
+              className="p-2 rounded-md text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+            >
+              <svg
+                className="h-6 w-6"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                {open ? (
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                ) : (
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
+                )}
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile menu */}
+      {open && (
+        <div className="md:hidden bg-white dark:bg-gray-800 border-t border-gray-100 dark:border-gray-700">
+          <div className="px-2 pt-2 pb-3 space-y-1">
+            <Link
+              to="/dashboard"
+              onClick={() => setOpen(false)}
+              className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700"
+            >
+              Dashboard
+            </Link>
+
+            <Link
+              to="/users"
+              onClick={() => setOpen(false)}
+              className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700"
+            >
+              Users
+            </Link>
+
+            <Link
+              to="/chat"
+              onClick={() => setOpen(false)}
+              className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700"
+            >
+              Chat
+            </Link>
+
+            <Link
+              to="/about"
+              onClick={() => setOpen(false)}
+              className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700"
+            >
+              About
+            </Link>
+
+            <button
+              onClick={() => {
+                setOpen(false);
+                onLogout();
+              }}
+              className="w-full text-left px-3 py-2 rounded-md text-base font-medium bg-red-50 text-red-600 hover:bg-red-100 dark:bg-red-600 dark:text-white dark:hover:bg-red-500"
+            >
+              Logout
+            </button>
+          </div>
+                <ToggleButton/>
+        </div>
+      )}
+
+    </header>
+  )
+}

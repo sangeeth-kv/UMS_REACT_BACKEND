@@ -9,11 +9,22 @@ import { signInSchema } from "../../../validation/schemas/signinSchema";
 import log from "../../../utils/logger"
 import signinUser from "../../../services/usreSignin";
 import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { setAccessToken, setUser } from "../../../store/authSlice";
+import axiosInstance from "../../../api/axiosInstance";
+import {useNavigate } from "react-router-dom"
 
 function UserSignin() {
   const {register,handleSubmit,setError,formState:{errors}}=useForm({resolver:yupResolver(signInSchema)})
   const [show, setShow] = useState(false);
   const [clicked,setClicked]=useState(false)
+  const dispatch=useDispatch()
+  const navigate=useNavigate()
+
+  const test=async ()=>{
+    const response=await axiosInstance.get("/test")
+    console.log("response is here  : : : : : : : :",response)
+  }
 
   const onSubmit=async (data)=>{
 
@@ -23,8 +34,13 @@ function UserSignin() {
       if(clicked)return;
       setClicked(true)
       const response=await signinUser(data)
+      console.log("response in the log of signin : ",response)
       if(response.success){
+        log.debug(`debug in signin : ${response.data.accessToken}`)
+        dispatch(setAccessToken(response.data.accessToken))
+        dispatch(setUser(response.data.user))
         toast.success(response.message)
+        navigate("/dashboard")
       }else{
         if(response.errors){
           response.errors.forEach((err)=>{
@@ -79,6 +95,7 @@ function UserSignin() {
         />
 
       </div>
+      <button onClick={test}>click</button>
     </div>
   );
 }
