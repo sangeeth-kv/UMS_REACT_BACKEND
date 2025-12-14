@@ -4,14 +4,16 @@ const setUserDetails = require("./setUserDetails")
 
 
 
-async function findAllUsers() {
-    let allUsers=[]
-    const users=await userModel.find().lean()
-    logger.debug(`users got in findAllUsers : ${users}`)
-    for(let user of users){
-        allUsers.push(setUserDetails(user))
-    }
-    return allUsers
+async function findAllUsers(page,limit) {
+    let skip=(page-1)*limit
+    const [users,totalUsers]=await Promise.all([
+        userModel.find().skip(skip).limit(limit).lean(),
+        userModel.countDocuments()
+    ])
+    logger.debug(`users got in findAllUsers : ${users.length}`)
+
+    const allUsers=users.map((user)=>setUserDetails(user))
+    return {allUsers,totalUsers,totalPages: Math.ceil(totalUsers / limit),currentPage: page}
 }
 
 module.exports=findAllUsers

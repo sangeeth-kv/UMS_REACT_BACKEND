@@ -8,7 +8,7 @@ import { useEffect } from "react"
 import UserSignin from "./pages/users/userLogin/UserSignin"
 import { Toaster } from "react-hot-toast"
 import log from "./utils/logger"
-import useRefreshToken from "./hooks/useRefreshToken"
+// import useRefreshToken from "./hooks/useRefreshToken"
 import DashBoard from "./pages/users/dashBoard/DashBoard"
 import UsersPage from "./pages/users/usersPage/UsersPage"
 import Headers from "./components/Header/Headers"
@@ -23,22 +23,22 @@ function App() {
 
   const mode=useSelector((state)=>state.toggle.mode)
   const token=useSelector((state)=>state.auth.accessToken)
-  const user=useSelector((state)=>state.auth.user)
+  // const user=useSelector((state)=>state.auth.user)
 
   log.debug("AccesssTOken : ",token)
 
   log.debug("mode : ",mode)
   
-  const isLoading=useRefreshToken(token)
+  // const isLoading=useRefreshToken(token)
 
   useEffect(() => {
   document.documentElement.classList.toggle("dark", mode === "dark");
   }, [mode]);
  
-  log.debug(`user in APP.jsx: ${user}`)
-  console.log("suer : ",user)
+  // log.debug(`user in APP.jsx: ${user}`)
+  // console.log("suer : ",user)
 
-  if (isLoading) return <div>Loading...</div>;
+  // if (isLoading) return <div>Loading...</div>;
 
   return (
     <>
@@ -48,7 +48,7 @@ function App() {
 
         <Routes>
 
-          <Route path="/" element={user ? <Navigate to="/dashboard"/>:<Navigate to="/signin"/>} />
+          <Route path="/" element={<Navigate to="/dashboard" replace />} />
 
           <Route path="/signup" element={<PublicRoutes><UserSignup/></PublicRoutes>}/>
           <Route path="/signin" element={<PublicRoutes><UserSignin/></PublicRoutes>}/>

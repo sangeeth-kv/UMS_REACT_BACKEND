@@ -4,9 +4,8 @@ const requiredFileds=[
     "phone",
     "email",
     "isVerified",
-    "isBlocked",
     "createdAt",
-    "_id"
+    "_id",
 ]
 function setUserDetails(user){
     let userDetails={}

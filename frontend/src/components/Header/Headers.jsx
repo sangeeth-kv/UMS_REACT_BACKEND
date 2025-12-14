@@ -1,5 +1,5 @@
 import React,{useState} from 'react'
-import {Link} from "react-router-dom";
+import {NavLink} from "react-router-dom";
 import ToggleButton from '../../features/toggleMode/toggleButton';
 
 export default function Headers() {
@@ -16,33 +16,33 @@ export default function Headers() {
 
           {/* Desktop nav */}
           <nav className="hidden md:flex items-center space-x-6">
-            <Link
+            <NavLink
               to="/dashboard"
-              className="text-gray-600 hover:text-indigo-600 dark:text-gray-300 dark:hover:text-indigo-400 px-2 py-1 rounded"
+              className={({ isActive }) =>`px-2 py-1 rounded transition ${isActive? "text-indigo-600 font-semibold dark:text-indigo-400": "text-gray-600 hover:text-indigo-600 dark:text-gray-300 dark:hover:text-indigo-400"}`}
             >
               Dashboard
-            </Link>
+            </NavLink>
 
-            <Link
+            <NavLink
               to="/users"
-              className="text-gray-600 hover:text-indigo-600 dark:text-gray-300 dark:hover:text-indigo-400 px-2 py-1 rounded"
+              className={({ isActive }) =>`px-2 py-1 rounded transition ${isActive? "text-indigo-600 font-semibold dark:text-indigo-400": "text-gray-600 hover:text-indigo-600 dark:text-gray-300 dark:hover:text-indigo-400"}`}
             >
               Users
-            </Link>
+            </NavLink>
 
-            <Link
+            <NavLink
               to="/chat"
-              className="text-gray-600 hover:text-indigo-600 dark:text-gray-300 dark:hover:text-indigo-400 px-2 py-1 rounded"
+              className={({ isActive }) =>`px-2 py-1 rounded transition ${isActive? "text-indigo-600 font-semibold dark:text-indigo-400": "text-gray-600 hover:text-indigo-600 dark:text-gray-300 dark:hover:text-indigo-400"}`}
             >
               Chat
-            </Link>
+            </NavLink>
 
-            <Link
+            <NavLink
               to="/about"
-              className="text-gray-600 hover:text-indigo-600 dark:text-gray-300 dark:hover:text-indigo-400 px-2 py-1 rounded"
+              className={({ isActive }) =>`px-2 py-1 rounded transition ${isActive? "text-indigo-600 font-semibold dark:text-indigo-400": "text-gray-600 hover:text-indigo-600 dark:text-gray-300 dark:hover:text-indigo-400"}`}
             >
               About
-            </Link>
+            </NavLink>
 
             <button
               onClick={onLogout}

@@ -13,12 +13,10 @@ const tokenController={
     getAccessToken:async (req,res,next)=>{
 
         try {
-
-            console.log("Author : ",req.headers.authorization)
         
             const refreshToken=req.cookies.refreshToken;
             
-            logger.debug(`REFRESH TOKEN GOT IN THE COOKIES IN getAccessToken : ${refreshToken} `)
+            // logger.debug(`REFRESH TOKEN GOT IN THE COOKIES IN getAccessToken : ${refreshToken} `)
             
             if(!refreshToken){
                 return failedResponse(STATUS_CODES.UNAUTHORIZED,[],"Session expired !",res)
@@ -30,11 +28,10 @@ const tokenController={
                 return failedResponse(STATUS_CODES.UNAUTHORIZED,[],"Session expired !",res)
             }
         
-            console.log("decode in token controller: ",decode)
         
             const jwtit=await getUserIdfromRedis(decode.jti)
 
-            logger.debug(`jwtit got in token Contoller : ${jwtit} `)
+            // logger.debug(`jwtit got in token Contoller : ${jwtit} `)
         
             if(!jwtit){
                 return failedResponse(STATUS_CODES.UNAUTHORIZED,[],"Session expired !",res)
@@ -45,8 +42,6 @@ const tokenController={
             const oldJti = decode.jti;
 
             await deleteUserIdfromRedis(oldJti)
-
-            console.log("user got in the getAccessToken : ",user)
 
             if(!user.success){
                 return failedResponse(STATUS_CODES.NOT_FOUND,[],"No User Found !",res)
@@ -68,6 +63,7 @@ const tokenController={
 
         } catch (error) {
             logger.debug(`error in the getAccessToken : ${error}`)
+            next(error)
         }
     },
     test:async (req,res) => {

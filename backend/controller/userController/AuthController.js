@@ -42,7 +42,7 @@ const authController={
             const refreshToken=await createRefreshToken(isUser.user)
             const accessToken=await createAccessToken(isUser.user)
 
-            logger.debug(`refresh token in sign in auth : ${refreshToken}`)
+            // logger.debug(`refresh token in sign in auth : ${refreshToken}`)
 
             const user=setUserDetails(isUser.user)
 
@@ -73,6 +73,7 @@ const authController={
                 return res.status(STATUS_CODES.CONFLICT).json({
                     success:false,errors:[{path:alreadyUser.mathchedField,message:`You have already an account using this ${alreadyUser.mathchedField}.`}]
                 })
+                // return failedResponse(STATUS_CODES.CONFLICT,[{path:alreadyUser.mathchedField,message:`You have already an account using this ${alreadyUser.mathchedField}.`},"",res])
             }
 
             const user=await saveUser(req.body)

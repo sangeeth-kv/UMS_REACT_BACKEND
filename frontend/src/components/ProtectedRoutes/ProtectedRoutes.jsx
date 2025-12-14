@@ -1,13 +1,49 @@
-import { Navigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { Navigate,useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { useEffect, useState } from "react";
+import { axiosRefresh } from "../../api/axiosInstance";
+import { setAccessToken, setUser } from "../../store/authSlice";
 
 export default function ProtectedRoute({ children }) {
+  const token = useSelector((state) => state.auth.accessToken);
   const user = useSelector((state) => state.auth.user);
+  const dispatch = useDispatch();
+  const navigate=useNavigate()
 
-  if (!user) {
-    return <Navigate to="/signin" replace />;
-  }
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+
+    if(token){
+        setLoading(false)
+        return
+    }
+    
+    async function refreshToken() {
+      try {
+        const res = await axiosRefresh.get("/refresh");
+        dispatch(setAccessToken(res.data.data.accessToken));
+        dispatch(setUser(res.data.data.user));
+      } catch (err) {
+        // refresh failed → handled below
+        console.error("Refresh token failed:", err);
+        const message = err.response?.data?.message;
+         if (message === "Session expired !")navigate("/signin", { replace: true });    
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    if (!token) {
+      refreshToken();
+    } else {
+      setLoading(false);
+    }
+  }, [token, dispatch,navigate]);
+
+  if (loading) return <div>Loading...</div>;
+
+  if (!user) return <Navigate to="/signin" replace />;
 
   return children;
 }
-    
