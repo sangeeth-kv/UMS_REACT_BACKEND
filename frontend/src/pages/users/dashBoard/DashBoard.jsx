@@ -1,16 +1,48 @@
-// import {useEffect} from "react";
+import {lazy,Suspense,useState} from "react";
 import { useSelector } from "react-redux"
+import Spinner from "../../../components/Spinner/Spinner";
+
+const UserDetailsModal = lazy(() =>
+  import("../../../components/UserDetailsModal/UserDetailsModal")
+);
+
+const AddUserDetailsModal = lazy(() =>
+  import("../../../components/UserDetailsModal/AddUserDetailsModal")
+);
+
+const EditUserDetailsModal = lazy(() =>
+  import("../../../components/UserDetailsModal/EditUserDetailsModal")
+);
+// import addUserDetails from "../../../services/addUserDetails";
+// import log from "../../../utils/logger"
+
 
 
 function DashBoard(){
     const user=useSelector((state)=>state.auth.user)
+    const isProfileCompleted=useSelector((state)=>state.auth.user.isProfileCompleted)
+    const [isMore,setIsMore]=useState(false)
+    const [isAddDetails,setAddDetails]=useState(false)
+    const [isEditDetails,setEditDetails]=useState(false)
+    console.log(isMore);
+    
+   
 
     if (!user) {
-        return <p>Loading...</p>;  // or spinner
+        return <Spinner/>;  // or spinner
     }
+
+    
 
     return(
          <div className="min-h-screen bg-gray-100 dark:bg-gray-900 p-6">
+            
+            <Suspense fallback={<Spinner />}>
+                {isMore && <UserDetailsModal onClick={() => setIsMore(false)} />}
+                {isAddDetails && <AddUserDetailsModal onClose={() => setAddDetails(false)} />}
+                {isEditDetails && <EditUserDetailsModal onClose={() => setEditDetails(false)} />}
+            </Suspense>
+
       <div className="max-w-4xl mx-auto">
         
         {/* Header */}
@@ -34,9 +66,14 @@ function DashBoard(){
             <p className="text-gray-600 dark:text-gray-400">
               {user.email}
             </p>
-            <span className="inline-block mt-2 px-3 py-1 text-sm rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300">
-              Logged In
+            <span onClick={()=>setIsMore(true)} className="inline-block mt-2 px-3 py-1 text-sm rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300">
+              View More details
             </span>
+            {isProfileCompleted ? <span onClick={()=>setEditDetails(true)} className="inline-block mt-2 px-3 py-1 ml-2 text-sm rounded-full bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300">
+              Edit details
+            </span> : <span onClick={()=>setAddDetails(true)} className="inline-block mt-2 px-3 py-1 ml-2 text-sm rounded-full bg-red-100 text-red-700 dark:bg-red-900 dark:text-blue-300">
+              Add more details
+            </span>} 
           </div>
         </div>
 
@@ -48,14 +85,15 @@ function DashBoard(){
               Account Status
             </h4>
 
-            <p
-              className={`font-medium ${
-                user.isVerified
-                  ? "text-green-600 dark:text-green-400"
-                  : "text-red-600 dark:text-red-400"
-              }`}
-            >
-              {user.isVerified ? "User is verified by Admin" : "User is not verified by Admin"}
+            <p className={`font-medium ${
+                user.isVerified === "verified"
+                    ? "text-green-600 dark:text-green-400"
+                    : user.isVerified === "requested"
+                    ? "text-yellow-500 dark:text-yellow-400"
+                    : "text-red-600 dark:text-red-400"
+            }`}>
+
+              {user.isVerified === "verified"? "User is verified by Admin": user.isVerified === "requested"? "Verification request sent": "User is not verified by Admin"}
             </p>
         </div>
 

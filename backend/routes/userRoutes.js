@@ -8,11 +8,16 @@ const signinValidators = require("../validators/signinValidators")
 const tokenController=require("../controller/tokenController/tokenController")
 const verifyAccessToken = require("../Middlewares/verifyAccessToken")
 const userController = require("../controller/userController/userController")
+const ProfileDetailsValidator = require("../validators/profileDetailsValidator")
+const { default: profileDetailsSchema } = require("../../frontend/src/validation/schemas/profileDetailsSchema")
 
 router.post("/signup",authLimiter,SignupValidator,validate,authController.verifySignup)
 router.post("/signin",authLimiter,signinValidators,validate,authController.verifySignin)
 router.get("/refresh",tokenController.getAccessToken)
 router.get("/test",tokenController.test)
 router.get("/users",verifyAccessToken,userController.getAllUsers)
+router.get("/users-details",verifyAccessToken,userController.getUserDetails)
+router.post("/add-details",verifyAccessToken,ProfileDetailsValidator,validate,userController.addUserProfileDetails)
+router.patch("/set-edit-user-details",verifyAccessToken,ProfileDetailsValidator,validate,userController.updateUserProfileDetails)
 
 module.exports=router

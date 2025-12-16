@@ -10,9 +10,10 @@ import log from "../../../utils/logger"
 import signinUser from "../../../services/usreSignin";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
-import { setAccessToken, setUser } from "../../../store/authSlice";
-import axiosInstance from "../../../api/axiosInstance";
+import { setAccessToken, setUser, updateUser } from "../../../store/authSlice";
+// import axiosInstance from "../../../api/axiosInstance";
 import {useNavigate } from "react-router-dom"
+import Spinner from "../../../components/Spinner/Spinner";
 
 function UserSignin() {
   const {register,handleSubmit,setError,formState:{errors}}=useForm({resolver:yupResolver(signInSchema)})
@@ -21,9 +22,18 @@ function UserSignin() {
   const dispatch=useDispatch()
   const navigate=useNavigate()
 
-  const test=async ()=>{
-    const response=await axiosInstance.get("/test")
-    console.log("response is here  : : : : : : : :",response)
+  // const test=async ()=>{
+  //   const response=await axiosInstance.get("/test")
+  //   console.log("response is here  : : : : : : : :",response)
+  // }
+
+  if (clicked) {
+    return (
+      <div className="min-h-screen flex items-center justify-center 
+                      bg-blue-50 dark:bg-gray-900">
+        <Spinner />
+      </div>
+    );
   }
 
   const onSubmit=async (data)=>{
@@ -39,6 +49,7 @@ function UserSignin() {
         log.debug(`debug in signin : ${response.data.accessToken}`)
         dispatch(setAccessToken(response.data.accessToken))
         dispatch(setUser(response.data.user))
+        dispatch(updateUser({isProfileCompleted:response.data.profile}))
         toast.success(response.message)
         navigate("/dashboard")
       }else{
@@ -95,7 +106,6 @@ function UserSignin() {
         />
 
       </div>
-      <button onClick={test}>click</button>
     </div>
   );
 }

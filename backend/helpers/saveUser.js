@@ -1,4 +1,5 @@
 const userModel=require("../model/userModel")
+const UserProfile=require("../model/userProfile")
 const logger=require("../config/logger");
 const { hashPassword } = require("./passwordHelper");
 
@@ -13,6 +14,10 @@ async function saveUser(user){
             email: user.email,
             phone: user.phone,
             password: hashedPassword
+        });
+
+        await UserProfile.create({
+            userId: newUser._id
         });
 
         return newUser

@@ -6,6 +6,7 @@ const {getUserIdfromRedis,deleteUserIdfromRedis} =require("../../helpers/redisHe
 const getUser = require("../../helpers/getUser");
 const logger=require("../../config/logger");
 const setUserDetails = require("../../helpers/setUserDetails");
+const getUserDetails = require("../../helpers/getuserDetails");
 
 
 const tokenController={
@@ -58,8 +59,10 @@ const tokenController={
             })
 
             const userDetails=setUserDetails(user.user);
+            const userIsProfileComplete=await getUserDetails(userDetails._id)
+            // console.log("sdjhfjksadf : ",userIsProfileComplete)
         
-            return successResponse(STATUS_CODES.OK,{accessToken: newAccessToken,user:userDetails},"",res)
+            return successResponse(STATUS_CODES.OK,{accessToken: newAccessToken,user:userDetails,isProfileCompleted:userIsProfileComplete.userDetails.profile.isProfileCompleted},"",res)
 
         } catch (error) {
             logger.debug(`error in the getAccessToken : ${error}`)

@@ -10,11 +10,14 @@ export default function Headers() {
     }
 
   return (
-     <header className="bg-white dark:bg-gray-800 shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+     <header
+  className="fixed top-0 left-0 right-0 z-50
+             bg-white dark:bg-gray-800 shadow-sm"
+>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ">
         <div className="flex justify-between h-16 items-center">
 
-          {/* Desktop nav */}
+          {/* Desktop nav */} 
           <nav className="hidden md:flex items-center space-x-6">
             <NavLink
               to="/dashboard"
@@ -50,6 +53,8 @@ export default function Headers() {
             >
               Logout
             </button>
+
+            <ToggleButton/>
           </nav>
 
           {/* Mobile: hamburger */}
@@ -91,37 +96,37 @@ export default function Headers() {
       {open && (
         <div className="md:hidden bg-white dark:bg-gray-800 border-t border-gray-100 dark:border-gray-700">
           <div className="px-2 pt-2 pb-3 space-y-1">
-            <Link
+            <NavLink
               to="/dashboard"
               onClick={() => setOpen(false)}
               className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700"
             >
               Dashboard
-            </Link>
+            </NavLink>
 
-            <Link
+            <NavLink
               to="/users"
               onClick={() => setOpen(false)}
               className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700"
             >
               Users
-            </Link>
+            </NavLink>
 
-            <Link
+            <NavLink
               to="/chat"
               onClick={() => setOpen(false)}
               className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700"
             >
               Chat
-            </Link>
+            </NavLink>
 
-            <Link
+            <NavLink
               to="/about"
               onClick={() => setOpen(false)}
               className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700"
             >
               About
-            </Link>
+            </NavLink>
 
             <button
               onClick={() => {
@@ -132,8 +137,9 @@ export default function Headers() {
             >
               Logout
             </button>
+            <ToggleButton/>
           </div>
-                <ToggleButton/>
+                
         </div>
       )}
 

@@ -12,7 +12,12 @@ const userSchema = new Schema(
 
     refreshToken: { type: String },
 
-    isVerified: { type: Boolean, default: false },
+    isVerified: {
+      type: String,
+      enum: ["not_verified", "requested", "verified"],
+      default: "not_verified"
+    }
+,
 
     role: { 
       type: String, 

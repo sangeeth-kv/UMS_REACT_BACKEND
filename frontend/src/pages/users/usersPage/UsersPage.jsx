@@ -1,13 +1,17 @@
 import {useEffect,useState} from "react"
+import {useSearchParams} from "react-router-dom"
 import getAllUsers from "../../../services/getAllUsers"
+import Spinner from "../../../components/Spinner/Spinner";
 
 
 
 
 function UsersPage(){
 
+    const [searchParams, setSearchParams] = useSearchParams();
+
     const [users,setUsers]=useState([])
-    const [page,setPage]=useState(1)
+    const [page,setPage]=useState(Number(searchParams.get("page")) || 1)
     const [totalPage,setTotalPage]=useState(1)
     const limit=2
 
@@ -26,8 +30,12 @@ function UsersPage(){
         })
     },[page])
 
+    useEffect(() => {
+        setSearchParams({ page });
+    }, [page, setSearchParams]);
+
     if(!users){
-        return(<h1>loading...</h1>)
+        return(<Spinner/>)
     }
 
     return (
@@ -55,14 +63,21 @@ function UsersPage(){
               </div>
 
               <span
-                className={`px-3 py-1 rounded-full text-sm font-medium ${
-                  user.isVerified
-                    ? "bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300"
-                    : "bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300"
-                }`}
-              >
-                {user.isVerified ? "Verified" : "Not Verified"}
-              </span>
+  className={`px-3 py-1 rounded-full text-sm font-medium ${
+    user.isVerified === "verified"
+      ? "bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300"
+      : user.isVerified === "requested"
+      ? "bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300"
+      : "bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300"
+  }`}
+>
+  {user.isVerified === "verified"
+    ? "Verified"
+    : user.isVerified === "requested"
+    ? "Verification Requested"
+    : "Not Verified"}
+</span>
+
             </div>
           ))}
         </div>

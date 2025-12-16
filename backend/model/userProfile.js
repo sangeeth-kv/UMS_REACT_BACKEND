@@ -25,6 +25,11 @@ const userProfileSchema=new Schema({
 
     avatar: { type: String },
 
+    isProfileCompleted:{
+      type:Boolean,
+      default:false
+    }
+
 
 },{ timestamps: true })
 

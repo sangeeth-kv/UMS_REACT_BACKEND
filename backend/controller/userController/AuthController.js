@@ -10,6 +10,7 @@ const failedResponse=require("../../helpers/responses/failerResponse")
 const successResponse=require("../../helpers/responses/successResponse")
 const checkIsBlocked=require("../../helpers/checkIsBlocked")
 const setUserDetails=require("../../helpers/setUserDetails");
+const getUserDetails = require("../../helpers/getuserDetails");
 
 
 
@@ -46,6 +47,9 @@ const authController={
 
             const user=setUserDetails(isUser.user)
 
+            const isProfileCompleted=await getUserDetails(isUser.user._id)
+
+            const profile=isProfileCompleted.userDetails.profile.isProfileCompleted
 
             res.cookie('refreshToken',refreshToken,{
                 secure:process.env.NODE_ENV==="development"? false : true,
@@ -55,7 +59,7 @@ const authController={
             })
 
             // return res.status(STATUS_CODES.OK).json({success:true,accessToken,message:"Successfully signin"})
-            return successResponse(STATUS_CODES.OK,{accessToken,user},"Successfully signin",res)
+            return successResponse(STATUS_CODES.OK,{accessToken,user,profile},"Successfully signin",res)
 
         } catch (error) {
             logger.error(`error in verifySignin : ${error}`)

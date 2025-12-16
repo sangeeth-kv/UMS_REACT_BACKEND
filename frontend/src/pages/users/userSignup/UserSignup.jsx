@@ -12,6 +12,7 @@ import { Toaster,toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { API_ROUTES } from "../../../api/API_ROUTES";
 import log from "../../../utils/logger"
+import Spinner from "../../../components/Spinner/Spinner";
 
 
 function UserSignup() {
@@ -21,7 +22,14 @@ function UserSignup() {
   const [show, setShow] = useState(false);
   const navigate=useNavigate();
 
-  
+  if (clicked) {
+  return (
+    <div className="min-h-screen flex items-center justify-center 
+                    bg-blue-50 dark:bg-gray-900">
+      <Spinner />
+    </div>
+  );
+}
 
   const onSubmit=async(data)=>{
     log.debug("onSubmit hitted in signup ")
