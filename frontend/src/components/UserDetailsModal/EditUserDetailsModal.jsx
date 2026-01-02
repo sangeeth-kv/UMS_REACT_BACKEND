@@ -276,7 +276,7 @@ function EditUserDetailsModal({onClose}) {
             type="submit"
             className="px-6 py-2 rounded-xl bg-blue-600 text-white
                        hover:bg-blue-700 shadow-md hover:shadow-lg transition">
-            {isLoading ? "Save" : "saving"}
+            {isLoading ? "Saving" : "Save"}
           </button>
         </div>
 

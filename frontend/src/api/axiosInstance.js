@@ -1,6 +1,7 @@
 import axios from "axios";
 import store from "../app/store";
-import log from "../utils/logger"
+import log from "../utils/logger";
+import {toast} from "react-hot-toast"
 import { clearAccessToken, clearUser, setAccessToken } from "../store/authSlice";
 // import { clearAccessToken, setAccessToken } from "../store/authSlice";
 
@@ -89,6 +90,14 @@ axiosInstance.interceptors.response.use(
     const originalRequest = error.config;
     if (!error.response) return Promise.reject(error);
 
+    if(error.response?.data?.message=="Too many requests, please try after 5 minutes"){
+      toast.error("Too many requests, please try after 5 minutes")
+    }
+    // if(error.response?.data?.message=="Otp has expired request for new otp"){
+    //   // toast.error("Too many requests, please try after 5 minutes")
+    //   toast.error(error.response?.data?.message)
+    // }
+
     // Do not attempt to refresh for refresh endpoint or already retried
     if (originalRequest._retry || originalRequest.url?.includes("/refresh")) {
       return Promise.reject(error);
@@ -116,11 +125,11 @@ axiosInstance.interceptors.response.use(
       }
     }
 
-    if (error.response?.status === 401 && error.response.data?.message!=="TOKEN_EXPIRED"){
-      store.dispatch(clearAccessToken());
-      store.dispatch(clearUser());
-      window.location.href = "/signin";
-    }
+    // if (error.response?.status === 401 && error.response.data?.message!=="TOKEN_EXPIRED"){
+    //   store.dispatch(clearAccessToken());
+    //   store.dispatch(clearUser());
+    //   window.location.href = "/signin";
+    // }
 
     return Promise.reject(error);
   }

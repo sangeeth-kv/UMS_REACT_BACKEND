@@ -19,6 +19,7 @@ import {Navigate} from "react-router-dom";
 import PublicRoutes from "./components/PublicRoutes/PublicRoutes"
 import Spinner from "./components/Spinner/Spinner"
 import Footer from "./components/Footer/Footer"
+import OtpPage from "./pages/users/otpPage/OtpPage"
 
 
 
@@ -67,6 +68,13 @@ function App() {
             </Suspense>
           </ProtectedRoute>
         }/>
+
+
+          <Route path="/otp" element={
+            <ProtectedRoute>
+              <OtpPage/>
+            </ProtectedRoute>
+          }/>
 
           
         </Routes>

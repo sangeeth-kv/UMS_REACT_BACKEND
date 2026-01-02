@@ -1,9 +1,14 @@
 import React,{useState} from 'react'
+import {useSelector} from 'react-redux'
 import {NavLink} from "react-router-dom";
 import ToggleButton from '../../features/toggleMode/toggleButton';
+import NotificationIcon from '../Buttons/NotifcationIconButton';
+import Tooltip from '../ToolTip/ToolTip';
 
 export default function Headers() {
     const [open, setOpen] = useState(false);
+    const mode=useSelector((state)=>state.toggle.mode)
+
 
     const onLogout=()=>{
         console.log("logout clicked")
@@ -41,10 +46,10 @@ export default function Headers() {
             </NavLink>
 
             <NavLink
-              to="/about"
+              to="/blogs"
               className={({ isActive }) =>`px-2 py-1 rounded transition ${isActive? "text-indigo-600 font-semibold dark:text-indigo-400": "text-gray-600 hover:text-indigo-600 dark:text-gray-300 dark:hover:text-indigo-400"}`}
             >
-              About
+              Blogs
             </NavLink>
 
             <button
@@ -54,7 +59,13 @@ export default function Headers() {
               Logout
             </button>
 
-            <ToggleButton/>
+            <Tooltip position='bottom' content={mode==="dark"?"Enable light mode":"Enable dark mode"}>
+                <ToggleButton/>
+            </Tooltip>
+
+            <Tooltip content="view all notification" position='bottom'>
+                <NotificationIcon/>
+            </Tooltip>
           </nav>
 
           {/* Mobile: hamburger */}

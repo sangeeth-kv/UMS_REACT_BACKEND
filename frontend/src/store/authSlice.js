@@ -15,7 +15,7 @@ const authSlice=createSlice({
             // log.degbug(`state : >>>> ${state}`)
             state.accessToken=action.payload
         },
-        clearAccessTokne:(state)=>{
+        clearAccessToken:(state)=>{
             state.accessToken=null;
         },
         setUser:(state,action)=>{

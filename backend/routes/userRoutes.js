@@ -10,6 +10,7 @@ const verifyAccessToken = require("../Middlewares/verifyAccessToken")
 const userController = require("../controller/userController/userController")
 const ProfileDetailsValidator = require("../validators/profileDetailsValidator")
 const { default: profileDetailsSchema } = require("../../frontend/src/validation/schemas/profileDetailsSchema")
+const otpController=require("../controller/userController/otpController")
 
 router.post("/signup",authLimiter,SignupValidator,validate,authController.verifySignup)
 router.post("/signin",authLimiter,signinValidators,validate,authController.verifySignin)
@@ -19,5 +20,7 @@ router.get("/users",verifyAccessToken,userController.getAllUsers)
 router.get("/users-details",verifyAccessToken,userController.getUserDetails)
 router.post("/add-details",verifyAccessToken,ProfileDetailsValidator,validate,userController.addUserProfileDetails)
 router.patch("/set-edit-user-details",verifyAccessToken,ProfileDetailsValidator,validate,userController.updateUserProfileDetails)
+router.post("/get-otp-page",authLimiter,verifyAccessToken,otpController.getOtpPage)
+router.post("/verify-otp",verifyAccessToken,otpController.verifyOtp)
 
 module.exports=router

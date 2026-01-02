@@ -6,6 +6,7 @@ const userProfileSchema=new Schema({
         ref:"User",
         required:true,
         unique:true,
+        index:true
     },
     gender: { type: String, enum: ["male", "female", "other"] },
 

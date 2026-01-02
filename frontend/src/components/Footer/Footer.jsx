@@ -52,10 +52,10 @@ import { NavLink } from "react-router-dom";
               </NavLink>
 
               <NavLink
-                to="/about"
+                to="/blogs"
                 className="text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition"
               >
-                About
+                Blogs
               </NavLink>
             </nav>
           </div>

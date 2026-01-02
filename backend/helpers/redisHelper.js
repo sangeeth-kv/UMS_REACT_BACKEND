@@ -37,4 +37,39 @@ async function checkIsblackListed(jwiti) {
     }
 }
 
-module.exports={getUserIdfromRedis,deleteUserIdfromRedis,addUserId,checkIsblackListed}
+async function setOtp(otpHash,userId) {
+    try {
+        await client.set(`email-otp:${userId}`,otpHash,{ EX: 300 })
+        // await client.set(`email-otp:${userId}`,otpHash,{ EX: 100 });
+    } catch (error) {
+        logger.error(`error in the setOtp function : ${error}`)
+    }
+}
+
+async function deleteOtp(userId) {
+    try {
+        await client.del(`email-otp:${userId}`)
+    } catch (error) {
+        logger.error(`error in the deleteOtp function : ${error}`)
+    }
+}
+
+async function getOtp(userId) {
+    try {
+        const otp=await client.get(`email-otp:${userId}`)
+        console.log("otp in get otp : ",otp)
+        return otp
+    } catch (error) {
+        logger.error(`error in the getOtp function : ${error}`)
+    }
+}
+
+async function getTTL(userId) {
+    try {
+        const ttl=await client.ttl(`email-otp:${userId}`)
+        return ttl
+    } catch (error) {
+        logger.error(`error in the getOtp function : ${error}`)
+    }
+}
+module.exports={getUserIdfromRedis,deleteUserIdfromRedis,addUserId,checkIsblackListed,setOtp,getOtp,deleteOtp,getTTL}
