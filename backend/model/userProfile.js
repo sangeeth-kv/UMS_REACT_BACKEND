@@ -24,8 +24,6 @@ const userProfileSchema=new Schema({
       pincode: { type: String }
     },
 
-    avatar: { type: String },
-
     isProfileCompleted:{
       type:Boolean,
       default:false

@@ -23,7 +23,19 @@ const userSchema = new Schema(
       type: String, 
       enum: ["user", "admin", "superadmin"], 
       default: "user" 
+    },
+
+    avatar: { type: String },
+
+    thumbnail:{type:String},
+
+    avatarThumbStatus: {
+      type: String,
+      enum: ["pending", "processing", "ready", "failed"],
+      default: "pending"
     }
+
+
   },
   { timestamps: true }
 );

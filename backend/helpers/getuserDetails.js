@@ -7,13 +7,13 @@ const mapUserDetails = require("../mappers/userDetailsMapper");
 
 
 async function getUserDetails(userId){
-    const user=await UserModel.findById(userId).select("fullname phone email isBlocked isDeleted isVerified createdAt _id")
+    const user=await UserModel.findById(userId).select("fullname phone email isBlocked isDeleted isVerified createdAt _id avatar avatarThumbStatus thumbnail")
 
     if(!user){
         return {success:false, message:"User not found"}
     }
-    const profile=await UserProfile.findOne({userId: new mongoose.Types.ObjectId(userId)}).select("gender dateOfBirth bloodGroup address avatar isProfileCompleted")
-    console.log("profile : ",profile)
+    const profile=await UserProfile.findOne({userId: new mongoose.Types.ObjectId(userId)}).select("gender dateOfBirth bloodGroup address isProfileCompleted")
+    console.log("profile => : ",profile)
 
     if(!profile){
         return {success:false,message:"User not found"}

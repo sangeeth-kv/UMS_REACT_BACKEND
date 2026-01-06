@@ -6,6 +6,9 @@ const requiredFileds=[
     "isVerified",
     "createdAt",
     "_id",
+    "avatar",
+    "avatarThumbStatus",
+    "thumbnail"
 ]
 function setUserDetails(user){
     let userDetails={}

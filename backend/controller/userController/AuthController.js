@@ -45,11 +45,19 @@ const authController={
 
             // logger.debug(`refresh token in sign in auth : ${refreshToken}`)
 
+            logger.debug("reached here! 1")
+
             const user=setUserDetails(isUser.user)
+
+            logger.debug("reached here! 2")
 
             const isProfileCompleted=await getUserDetails(isUser.user._id)
 
+            logger.debug("reached here! 3")
+
             const profile=isProfileCompleted.userDetails.profile.isProfileCompleted
+
+            logger.debug("reached here! 4")
 
             res.cookie('refreshToken',refreshToken,{
                 secure:process.env.NODE_ENV==="development"? false : true,

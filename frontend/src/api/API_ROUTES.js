@@ -5,5 +5,7 @@ export const API_ROUTES={
     ADD_USER_DETAILS:"/add-details",
     ADD_EDITED_USER_DETAILS:"/set-edit-user-details",
     GET_OTP_PAGE:"/get-otp-page",
-    VERIFY_OTP:"/verify-otp"
+    VERIFY_OTP:"/verify-otp",
+    UPLOAD_AVATHAR:"/upload-avathar",
+    
 }

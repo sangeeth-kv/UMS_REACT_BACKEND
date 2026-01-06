@@ -8,6 +8,9 @@ function mapUserDetails(user, profile) {
     isDeleted: user.isDeleted,
     isVerified: user.isVerified,
     createdAt: user.createdAt,
+    avatar:user.avatar,
+    avatarThumbStatus:user.avatarThumbStatus,
+    thumbnail:user.thumbnail,
 
     profile: profile
       ? {

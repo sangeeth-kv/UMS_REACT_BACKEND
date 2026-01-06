@@ -70,7 +70,8 @@ const otpController={
 
             await deleteOtp(userId)
 
-            const updatedUser=await updateUser(email, "isVerified", "verified");
+            // const updatedUser=await updateUser(email, "isVerified", "verified");
+            const updatedUser=await updateUser(userId, {isVerified:"verified"});
             const isUser=await getUser(email)
             const user=setUserDetails(isUser.user)
 

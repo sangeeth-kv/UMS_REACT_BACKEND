@@ -4,6 +4,8 @@ const getUserDetails=require("../../helpers/getuserDetails")
 const failedResponse = require("../../helpers/responses/failerResponse")
 const successResponse = require("../../helpers/responses/successResponse")
 const saveUserProfile = require("../../helpers/saveUserProfile")
+const updateUser = require("../../helpers/updateUser")
+const { uploadOriginalImageAndQueue } = require("../../services/imageUploadService")
 const STATUS_CODES=require("../../utils/statusCodes")
 
 
@@ -73,6 +75,37 @@ const userController={
                 return failedResponse(STATUS_CODES.BAD_REQUEST,[],"No user found",res)
             }
             return successResponse(STATUS_CODES.OK,{},"profile updated successFully",res)
+
+        } catch (error) {
+            logger.error(error)
+            next(error)
+        }
+    },
+    updateUserAvathar:async (req,res,next) => {
+        try {
+            logger.debug("hitted on update avathar!!")
+            console.log(req.file)
+
+            const avatharUrl=await uploadOriginalImageAndQueue({
+                buffer:req.file.buffer,
+                folder:"avatars",
+                model:"User",
+                modelId:req.user.userId,
+                field:"avatar"
+            })
+
+            console.log("avathat url : ",avatharUrl)
+
+            // await updateUser(req.user.email,"avatar",avatharUrl)
+            // await updateUser(req.user.email,"avatarThumbStatus","processing")
+
+            await updateUser(req.user.userId,{avatar:avatharUrl,avatarThumbStatus:"processing"})
+
+            const userDetails=await getUserDetails(req.user.userId)
+
+            console.log(userDetails.userDetails)
+
+            return successResponse(STATUS_CODES.OK,{user:userDetails.userDetails},"profile updated successfully",res)
 
         } catch (error) {
             logger.error(error)
