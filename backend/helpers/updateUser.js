@@ -37,6 +37,7 @@ const UserModel = require("../model/userModel");
 const ALLOWED_FIELDS = [
   "fullname",
   "phone",
+  "email",
   "password",
   "isBlocked",
   "isDeleted",

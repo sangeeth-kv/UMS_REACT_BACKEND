@@ -12,14 +12,18 @@ import log from "./utils/logger"
 // import DashBoard from "./pages/users/dashBoard/DashBoard"
 const DashBoard = lazy(()=>import("./pages/users/dashBoard/DashBoard"))
 const UserPage=lazy(()=>import ("./pages/users/usersPage/UsersPage"))
-import Headers from "./components/Header/Headers"
+const SettingsPage=lazy(()=>import("./pages/users/settingsPage/SettingsPage"))
+// import Headers from "./components/Header/Headers"
 import ProtectedRoute from "./components/ProtectedRoutes/ProtectedRoutes"
 import HomeRedirect from "./components/HomeRedirect/HomeRedirect"
 import {Navigate} from "react-router-dom";
 import PublicRoutes from "./components/PublicRoutes/PublicRoutes"
 import Spinner from "./components/Spinner/Spinner"
-import Footer from "./components/Footer/Footer"
-import OtpPage from "./pages/users/otpPage/OtpPage"
+// import Footer from "./components/Footer/Footer"
+// import OtpPage from "./pages/users/otpPage/OtpPage"
+const OtpPage=lazy(()=>import ("./pages/users/otpPage/OtpPage"))
+import Layout from "./components/Layout/Layout"
+
 
 
 
@@ -42,7 +46,7 @@ function App() {
     <>
           <Toaster/>
 
-          {token && <Headers/>}
+          {/* {token && <Headers/>} */}
 
         <Routes>
 
@@ -54,32 +58,50 @@ function App() {
 
           <Route path="/dashboard"  element={
             <ProtectedRoute>
+              <Layout>
               <Suspense fallback={<Spinner/>}>
                 <DashBoard/>
               </Suspense>
+              </Layout> 
             </ProtectedRoute>
           } />
 
 
           <Route path="/users" element={
           <ProtectedRoute>
+            <Layout>
             <Suspense fallback={<Spinner/>}>
               <UserPage/>
             </Suspense>
+            </Layout>
           </ProtectedRoute>
         }/>
 
 
           <Route path="/otp" element={
             <ProtectedRoute>
+              <Layout>
+              <Suspense fallback={<Spinner/>}>
               <OtpPage/>
+              </Suspense>
+              </Layout>
+            </ProtectedRoute>
+          }/>
+
+          <Route path="/settings" element={
+            <ProtectedRoute>
+              <Layout>
+                <Suspense fallback={<Spinner/>}>
+                <SettingsPage/>
+                </Suspense>
+              </Layout>
             </ProtectedRoute>
           }/>
 
           
         </Routes>
 
-        {token && <Footer/>}
+        {/* {token && <Footer/>} */}
 
         </>
   )

@@ -46,10 +46,10 @@ export default function Headers() {
             </NavLink>
 
             <NavLink
-              to="/blogs"
+              to="/settings"
               className={({ isActive }) =>`px-2 py-1 rounded transition ${isActive? "text-indigo-600 font-semibold dark:text-indigo-400": "text-gray-600 hover:text-indigo-600 dark:text-gray-300 dark:hover:text-indigo-400"}`}
             >
-              Blogs
+              Settings
             </NavLink>
 
             <button

@@ -3,13 +3,13 @@
 // import React,{useState} from 'react'
 // import log from "../../utils/logger"
 
-function NotCompletedProfile() {
+function NotCompletedProfile({setAddDetails}) {
 
     // const [addProfile,setAddProfile]=useState(false)
 
-    const handleAddProfile=()=>{
-        // setAddProfile(true)
-    }
+    // const handleAddProfile=()=>{
+    //     // setAddProfile(true)
+    // }
 
   return (
     <div className="mt-6 rounded-xl border border-dashed border-gray-300 dark:border-gray-600 p-6 text-center bg-gray-50 dark:bg-gray-900">
@@ -22,7 +22,7 @@ function NotCompletedProfile() {
         </p>
 
         <button
-          onClick={()=>handleAddProfile()}
+          onClick={()=>setAddDetails()}
           className="mt-4 inline-flex items-center justify-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 transition"
         >
           Add Profile

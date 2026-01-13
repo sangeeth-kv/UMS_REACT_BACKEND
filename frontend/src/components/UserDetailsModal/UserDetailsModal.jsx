@@ -9,7 +9,7 @@ import MoreDetails from './MoreDetails'
 import NotCompletedProfile from './NotCompletedProfile'
 
 
-function UserDetailsModal({onClick}) {
+function UserDetailsModal({onClick,setAddDetails}) {
 
     const [user,setUser]=useState()
 
@@ -43,11 +43,23 @@ function UserDetailsModal({onClick}) {
 
         {/* Avatar */}
         <div className="flex justify-center">
+          {user.avatarThumbStatus === "ready" && user.thumbnail ? (
+          <img
+            src={user.thumbnail}
+            alt="avatar thumbnail"
+            className="w-12 h-12 rounded-full object-cover"
+          />
+        ) : user.avatar ? (
           <img
             src={user.avatar}
-            alt="Avatar"
-            className="w-24 h-24 rounded-full border-4 border-blue-500 object-cover"
+            alt="avatar"
+            className="w-12 h-12 rounded-full object-cover"
           />
+        ) : (
+          <div className="w-12 h-12 rounded-full bg-blue-600 flex items-center justify-center text-white font-semibold">
+            {user.fullname?.charAt(0).toUpperCase()}
+          </div>
+        )}
         </div>
 
         {/* Name */}
@@ -61,7 +73,7 @@ function UserDetailsModal({onClick}) {
 
         {/* Details */}
 
-      {user.profile.isProfileCompleted ? <MoreDetails user={user.profile}/> : <NotCompletedProfile/>}
+      {user.profile.isProfileCompleted ? <MoreDetails user={user.profile}/> : <NotCompletedProfile setAddDetails={setAddDetails}/>}
 
       </div>
     </div>

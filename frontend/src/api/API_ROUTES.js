@@ -7,5 +7,6 @@ export const API_ROUTES={
     GET_OTP_PAGE:"/get-otp-page",
     VERIFY_OTP:"/verify-otp",
     UPLOAD_AVATHAR:"/upload-avathar",
+    UPDATE_EMAIL:"/update-email",
     
 }

@@ -4,7 +4,7 @@ const bullRedis=require("../config/bullRedis");
 const sendMail = require("../helpers/sendMail");
 const logger = require("../config/logger");
 
-const worker=new Worker("emailQueue",sendMail,{connection:bullRedis})
+const worker=new Worker("emailQueue",sendMail,{connection:bullRedis,lockDuration: 60000,concurrency: 1 })
 
 
 worker.on("completed",(job)=>{
@@ -12,8 +12,8 @@ worker.on("completed",(job)=>{
     console.log(`✅ Job completed: ${job.id}`);
 })
 
-worker.on("failed",(job)=>{
-    logger.debug(`failed to  sent the email :  ${job.id} `)
-     console.error(`❌ Job failed: ${job.id}`, err);
-})
+worker.on("failed", (job, err) => {  
+  logger.error(`failed to send the email : ${job?.id}`);
+  console.error(`❌ Job failed: ${job?.id}`, err);
+});
 

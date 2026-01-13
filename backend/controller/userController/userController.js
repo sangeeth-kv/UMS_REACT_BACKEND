@@ -1,4 +1,5 @@
 const logger = require("../../config/logger")
+const checkUser = require("../../helpers/checkUser")
 const findAllUsers = require("../../helpers/findAllUsers")
 const getUserDetails=require("../../helpers/getuserDetails")
 const failedResponse = require("../../helpers/responses/failerResponse")
@@ -14,9 +15,9 @@ const userController={
     getAllUsers:async (req,res,next) => {
     try {
         logger.debug("hit on getAllusers function in controller : ")
-        const {page,limit}=req.query
-        console.log("req ffff : ",page,limit)
-        const users=await findAllUsers(page,limit)
+        const {page,limit,searchQuery}=req.query
+        console.log("req ffff : ",page,limit,searchQuery)
+        const users=await findAllUsers(page,limit,searchQuery.trim())
         console.log("users got from getAllUsers : => ",users)
         return successResponse(STATUS_CODES.OK,{users:users.allUsers,totalPage:users.totalPages},"",res)
     } catch (error) {
@@ -110,6 +111,19 @@ const userController={
         } catch (error) {
             logger.error(error)
             next(error)
+        }
+    },
+    updateEmail:async (req,res,next) => {
+        try {
+            const email=req.body.email
+            const isAlreadyExistEmail=await checkUser(email,null)
+            logger.debug(`isalready user: ${isAlreadyExistEmail.exists}`)
+            const updateEmail=await updateUser(req.user.userId,{email:email,isVerified:"not_verified"})
+            console.log(updateEmail)
+            return successResponse(STATUS_CODES.OK,{user:updateEmail},"New email updated successfull,Please verify it on the dashboard",res)
+
+        } catch (error) {
+            logger.error(error)
         }
     }
 

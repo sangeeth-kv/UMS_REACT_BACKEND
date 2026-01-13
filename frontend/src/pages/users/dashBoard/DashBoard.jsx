@@ -100,16 +100,21 @@ function DashBoard(){
     
 
     return(
-         <div className="min-h-screen bg-gray-100 dark:bg-gray-900 p-6">
+      
+        //  <div className="min-h-screen bg-gray-100 dark:bg-gray-900 p-6">
+        // <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pt-20 px-6 pb-6">
 
-            <Suspense fallback={<Spinner />}>
-                {isMore && <UserDetailsModal onClick={() => setIsMore(false)} />}
+
+            
+
+      <div className="max-w-4xl mx-auto">
+
+        <Suspense fallback={<Spinner />}>
+                {isMore && <UserDetailsModal setAddDetails={()=>setAddDetails(true)}onClick={() => setIsMore(false)} />}
                 {isAddDetails && <AddUserDetailsModal onClose={() => setAddDetails(false)} />}
                 {isEditDetails && <EditUserDetailsModal onClose={() => setEditDetails(false)} />}
                 { showCropper && <ImageCropper image={selectedImage} onClose={()=>setShowCropper(false)} onSave={handleCropSave} shape="round"/>}
             </Suspense>
-
-      <div className="max-w-4xl mx-auto">
         
         {/* Header */}
         <h1 className="text-3xl font-bold mb-6 text-gray-800 dark:text-white">
@@ -179,6 +184,7 @@ function DashBoard(){
             </span> </Tooltip> :<Tooltip position="bottom" content="Add more details"> <span onClick={()=>setAddDetails(true)} className="inline-block mt-2 px-3 py-1 ml-2 text-sm rounded-full bg-red-100 text-red-700 dark:bg-red-900 dark:text-blue-300">
               Add more details
             </span></Tooltip>} 
+
           </div>
         </div>
 
@@ -227,7 +233,7 @@ function DashBoard(){
 
         </div>
       </div>
-    </div>
+    // {/* </div> */}
     )
 }
 
