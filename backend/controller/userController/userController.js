@@ -1,6 +1,8 @@
 const logger = require("../../config/logger")
 const checkUser = require("../../helpers/checkUser")
+const deleteImageFromCloudinary = require("../../helpers/cloudinaryHelper")
 const findAllUsers = require("../../helpers/findAllUsers")
+const getUser = require("../../helpers/getUser")
 const getUserDetails=require("../../helpers/getuserDetails")
 const failedResponse = require("../../helpers/responses/failerResponse")
 const successResponse = require("../../helpers/responses/successResponse")
@@ -100,7 +102,10 @@ const userController={
             // await updateUser(req.user.email,"avatar",avatharUrl)
             // await updateUser(req.user.email,"avatarThumbStatus","processing")
 
-            await updateUser(req.user.userId,{avatar:avatharUrl,avatarThumbStatus:"processing"})
+            await updateUser(req.user.userId,{avatar: {
+                url: avatharUrl.original_url,
+                publicId: avatharUrl.original_publicId,
+                },avatarThumbStatus:"processing"})
 
             const userDetails=await getUserDetails(req.user.userId)
 
@@ -124,6 +129,44 @@ const userController={
 
         } catch (error) {
             logger.error(error)
+            next(error)
+        }
+    },
+    deleteAvatar:async (req,res,next) => {
+        try {
+            logger.debug("Hitted on delete avatar controller : ")
+            const userId=req.user.userId
+            const isUser=await getUser(req.user.email)
+
+            if(!isUser.success){
+                return failedResponse(STATUS_CODES.NOT_FOUND,[],"No user found",res)
+            }
+
+            const updatedUser=await updateUser(req.user.userId,{
+                avatar:{
+                    url:null,
+                    publicId:null,
+                    thumbnailUrl:null,
+                    thumbnailPublicId:null
+                },
+                avatarThumbStatus:"pending"
+            })
+
+            // console.log("Isuser : ",isUser)
+            if(isUser.user?.avatar){
+                if(isUser.user?.avatar?.url&&isUser.user?.avatar?.publicId){
+                    const deleteResult =await deleteImageFromCloudinary(isUser.user?.avatar?.publicId,isUser.user?.avatar?.thumbnailPublicId,req.user.userId)
+                    if(!deleteResult ){
+                        return failedResponse(STATUS_CODES.NOT_FOUND,[],"Image is not found",res)
+                    }
+                }
+            }
+
+            return successResponse(STATUS_CODES.OK,{user:updatedUser},"Profile picture deleted successfully",res)
+
+        } catch (error) {
+            logger.error(error)
+            next(error)
         }
     }
 

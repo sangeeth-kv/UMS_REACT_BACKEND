@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { Suspense,useState,useRef,lazy } from "react";
 import {useSelector,useDispatch} from "react-redux"
 import {toggleMode} from "../../../features/toggleMode/toggleModeSlice"
 import {toast} from "react-hot-toast"
@@ -6,8 +6,15 @@ import ConfirmationModal from "../../../components/ConfirmationModal/Confirmatio
 import log from "../../../utils/logger"
 import updateEmail from "../../../services/updateEmailService";
 import {useNavigate} from "react-router-dom";
-import {clearAccessToken,clearUser} from "../../../store/authSlice"
-
+import {clearAccessToken,clearUser, setUser} from "../../../store/authSlice"
+import { getCroppedImage } from "../../../helpers/getCroppedImage";
+import uploadAvathar from "../../../services/uploadAvatar";
+import Spinner from "../../../components/Spinner/Spinner";
+import AvatarUploadingPreview from "../../../components/ImagePreview/AvatharImagePreview";
+import removeAvatar from "../../../services/handleRemoveAvatar";
+const ImageCropper=lazy(()=>
+    import ("../../../components/Cropper/ImageCropper")
+)
 
 
 export default function Settings() {
@@ -18,6 +25,12 @@ export default function Settings() {
   const user=useSelector((state)=>state.auth.user)
   const [isConfirmed,setIsConfirmed]=useState(false)
   const [email,setEmail]=useState("")
+  const [isUploading,setIsUploading]=useState(false)
+  const [showCropper,setShowCropper]=useState(false)
+  const fileInputRef = useRef(null);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [isDeleteAvatar,setIsDeleteAvatar]=useState(false)
+
   const navigate=useNavigate( )
   console.log("issss: ",isConfirmed)
 
@@ -28,6 +41,52 @@ export default function Settings() {
     { id: "notifications", label: "Notifications" },
     { id: "danger", label: "Deactivate" },
   ];
+
+
+
+  const handleImageSelect = (e) => {
+     const file = e.target.files[0];
+    if (!file) return;
+
+    if (!["image/jpeg", "image/png", "image/jpg"].includes(file.type)) {
+        toast.error("Only JPG, JPEG, PNG allowed");
+        return;
+    }
+
+    if(file.size> 2 * 1024 * 1024){
+        toast.error("Image must be under 2MB")
+        return;
+    }
+
+    const imageUrl = URL.createObjectURL(file);
+        setSelectedImage(imageUrl);
+        setShowCropper(true);
+    };
+
+    const handleCropSave=async({croppedAreaPixels,rotation})=>{
+            try {
+                setIsUploading(true)
+                const blob=await getCroppedImage(selectedImage, croppedAreaPixels,rotation);
+                const formData = new FormData();
+                formData.append("avatar", blob,"avatar.jpg");
+                setShowCropper(false)
+                const res = await uploadAvathar(formData);
+                console.log("response : ",res)
+                if(res.success){
+                    toast.success(res.message)
+                    dispatch(setUser(res.data.user))
+                }else{
+                    toast.error(res.message)
+                }
+    
+            } catch (error) {
+                log.error(`error in handleCropSave: ${error}`)
+            }finally{
+                setIsUploading(false)
+            }
+        }
+
+
 
 const handleEditEmail=async()=>{
   console.log("pressed handle email functoin")
@@ -47,15 +106,35 @@ const handleEditEmail=async()=>{
     log.error(error)
   }
 }
+
+
+const handleRemoveAvatar =async()=>{
+  try {
+    const res=await removeAvatar()
+    console.log("response in the handleREmove avatar : ",res)
+    if(res.success){
+      toast.success(res.message)
+      dispatch(setUser(res.data.user))
+    }
+
+  } catch (error) {
+    log.error(error)
+  }
+}
   
 
   return (
+
     <div className="max-w-4xl mx-auto space-y-6 mb-6">
 
       {/* Page Title */}
       <h1 className="text-3xl font-bold text-gray-800 dark:text-white">
         Settings
       </h1>
+
+    <Suspense fallback={<Spinner/>}>
+      { showCropper && <ImageCropper image={selectedImage} onClose={()=>setShowCropper(false)} onSave={handleCropSave} shape="round"/>}
+    </Suspense>
 
       <div className="flex flex-col md:flex-row gap-6">
 
@@ -90,15 +169,17 @@ const handleEditEmail=async()=>{
               </h2>
 
               <div className="flex items-center gap-6">
-               {user.avatarThumbStatus === "ready" && user.thumbnail ? (
+               {isUploading && selectedImage ?  (
+  <AvatarUploadingPreview src={selectedImage} />
+) :user.avatarThumbStatus === "ready" && user.avatar.thumbnailUrl ? (
           <img
-            src={user.thumbnail}
+            src={user.avatar.thumbnailUrl}
             alt="avatar thumbnail"
             className="w-12 h-12 rounded-full object-cover"
           />
-        ) : user.avatar ? (
+        ) : user.avatar.url ? (
           <img
-            src={user.avatar}
+            src={user.avatar.url}
             alt="avatar"
             className="w-12 h-12 rounded-full object-cover"
           />
@@ -107,17 +188,38 @@ const handleEditEmail=async()=>{
             {user.fullname?.charAt(0).toUpperCase()}
           </div>
         )}
+
+        <input
+            type="file"
+            accept="image/jpeg, image/jpg, image/png"
+            ref={fileInputRef}
+            hidden
+            onChange={handleImageSelect}
+        />
+
+
                 <div>
                   <p className="font-medium text-gray-800 dark:text-white">
                     @{user.fullname}
                   </p>
                   <div className="flex gap-4 mt-2 text-sm font-semibold">
-                    <button className="text-blue-600 hover:underline">
+                    {user.avatar.url?(<button 
+                    onClick={() => fileInputRef.current.click()}
+                    className="text-blue-600 hover:underline">
+                    
                       Change photo
-                    </button>
-                    <button className="text-red-500 hover:underline">
+                    </button>):(<button 
+                    onClick={() => fileInputRef.current.click()}
+                    className="text-blue-600 hover:underline">
+                    
+                      Upload Image
+                    </button>)}
+                    {user.avatar.url&&<button className="text-red-500 hover:underline"
+                    onClick={()=>setIsDeleteAvatar(true)}>
                       Remove photo
-                    </button>
+                    </button>}
+
+                    {isDeleteAvatar&&<ConfirmationModal open={isDeleteAvatar} title="Are you sure ?" message="Do you really want to remove avatar?" confirmText="Yes" cancelText="No" onConfirm={handleRemoveAvatar} onCancel={()=>setIsDeleteAvatar(false)}  danger={true} />}
                   </div>
                 </div>
               </div>
@@ -207,9 +309,9 @@ const handleEditEmail=async()=>{
 </div>
 
 
-              <button className="px-6 py-2 bg-blue-600 text-white rounded-md text-sm font-medium">
+              {/* <button className="px-6 py-2 bg-blue-600 text-white rounded-md text-sm font-medium">
                 Save Changes
-              </button>
+              </button> */}
             </div>
           )}
 

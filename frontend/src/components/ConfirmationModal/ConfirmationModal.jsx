@@ -53,7 +53,7 @@ function ConfirmationModal({
           </button>
 
           <button
-            onClick={onConfirm}
+            onClick={()=>onConfirm(onCancel())}
             className={`px-4 py-2 rounded-lg text-white transition
               ${
                 danger

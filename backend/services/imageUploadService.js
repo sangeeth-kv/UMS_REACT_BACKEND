@@ -12,7 +12,8 @@ async function uploadOriginalImageAndQueue({buffer,folder,model,modelId,field}) 
             {folder:`UMS_REACT/${folder}/originals`}
         )
 
-        logger.debug("reached here 2")
+        logger.debug("reached here 2 : ",original)
+        console.log("orginal url : ",original)
 
         await imageQueue.add("generate-thumbnail",{
             imageUrl:original.secure_url,
@@ -25,7 +26,7 @@ async function uploadOriginalImageAndQueue({buffer,folder,model,modelId,field}) 
 
         logger.debug("reached here 3")
 
-        return original.secure_url
+        return {original_url:original.secure_url,original_publicId:original.public_id}
 
     } catch (error) {
         logger.error(error)

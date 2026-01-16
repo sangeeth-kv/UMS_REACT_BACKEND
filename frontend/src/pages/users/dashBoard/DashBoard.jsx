@@ -131,18 +131,18 @@ function DashBoard(){
 >
  {isUploading && selectedImage ? (
   <AvatarUploadingPreview src={selectedImage} />
-) : user?.avatarThumbStatus === "ready" && user?.thumbnail ? (
+) : user?.avatarThumbStatus === "ready" && user?.avatar.thumbnailUrl ? (
   <div className="w-20 h-20 rounded-full overflow-hidden">
     <img
-      src={user.thumbnail}
+      src={user.avatar.thumbnailUrl}
       alt="avatar thumbnail"
       className="w-full h-full object-cover"
     />
   </div>
-) : user?.avatar ? (
+) : user?.avatar.url ? (
   <div className="w-20 h-20 rounded-full overflow-hidden">
     <img
-      src={user.avatar}
+      src={user.avatar.url}
       alt="avatar"
       className="w-full h-full object-cover"
     />

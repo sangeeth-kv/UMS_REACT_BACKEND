@@ -8,5 +8,6 @@ export const API_ROUTES={
     VERIFY_OTP:"/verify-otp",
     UPLOAD_AVATHAR:"/upload-avathar",
     UPDATE_EMAIL:"/update-email",
+    REMOVE_AVATAR:"/remove-avatar"
     
 }

@@ -25,5 +25,6 @@ router.post("/get-otp-page",authLimiter,verifyAccessToken,otpController.getOtpPa
 router.post("/verify-otp",verifyAccessToken,otpController.verifyOtp)
 router.post("/upload-avathar",verifyAccessToken,upload.single("avatar"),userController.updateUserAvathar)
 router.post("/update-email",verifyAccessToken,userController.updateEmail)
+router.delete("/remove-avatar",verifyAccessToken,userController.deleteAvatar)
 
 module.exports=router
