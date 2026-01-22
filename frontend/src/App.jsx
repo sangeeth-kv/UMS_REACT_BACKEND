@@ -23,6 +23,8 @@ import Spinner from "./components/Spinner/Spinner"
 // import OtpPage from "./pages/users/otpPage/OtpPage"
 const OtpPage=lazy(()=>import ("./pages/users/otpPage/OtpPage"))
 import Layout from "./components/Layout/Layout"
+import RoleProtectedRoutes from "./components/RoleProtectedRoutes/RoleProtectedRoutes"
+import ResetPassword from "./pages/users/ResetPassword/ResetPassword"
 
 
 
@@ -95,6 +97,37 @@ function App() {
                 <SettingsPage/>
                 </Suspense>
               </Layout>
+            </ProtectedRoute>
+          }/>
+
+
+          <Route path="/chat" element={
+            <ProtectedRoute>
+              <Layout>
+                <div className="mt-8 flex items-center justify-center bg-gray-50 dark:bg-gray-900">
+                  <h1 className="text-3xl font-bold text-gray-800 dark:text-white text-center">
+                    Service is currently unavailable!!
+                  </h1>
+                </div>
+              </Layout>
+            </ProtectedRoute>
+          }/>
+
+
+          <Route path="/reset-password/:token" element={
+            <ProtectedRoute>
+              <Layout>
+                <ResetPassword/>
+              </Layout>
+            </ProtectedRoute>
+          }/>
+
+
+          <Route path="/admin/dashboard" element={
+            <ProtectedRoute>
+              <RoleProtectedRoutes allowedRoles={["admin"]}>
+                <div>Admin Dashboard</div>
+              </RoleProtectedRoutes>
             </ProtectedRoute>
           }/>
 

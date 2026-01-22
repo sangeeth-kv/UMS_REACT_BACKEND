@@ -11,6 +11,7 @@ function mapUserDetails(user, profile) {
     avatar:user.avatar,
     avatarThumbStatus:user.avatarThumbStatus,
     thumbnail:user.thumbnail,
+    role:user.role,
 
     profile: profile
       ? {

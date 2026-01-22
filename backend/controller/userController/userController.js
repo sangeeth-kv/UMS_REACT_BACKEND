@@ -2,6 +2,7 @@ const logger = require("../../config/logger")
 const checkUser = require("../../helpers/checkUser")
 const deleteImageFromCloudinary = require("../../helpers/cloudinaryHelper")
 const findAllUsers = require("../../helpers/findAllUsers")
+const { getRandomToken, getHashed } = require("../../helpers/getHashed")
 const getUser = require("../../helpers/getUser")
 const getUserDetails=require("../../helpers/getuserDetails")
 const failedResponse = require("../../helpers/responses/failerResponse")
@@ -10,6 +11,7 @@ const saveUserProfile = require("../../helpers/saveUserProfile")
 const updateUser = require("../../helpers/updateUser")
 const { uploadOriginalImageAndQueue } = require("../../services/imageUploadService")
 const STATUS_CODES=require("../../utils/statusCodes")
+const emailQueue = require("../../queues/emailQueue")
 
 
 const userController={
@@ -163,6 +165,36 @@ const userController={
             }
 
             return successResponse(STATUS_CODES.OK,{user:updatedUser},"Profile picture deleted successfully",res)
+
+        } catch (error) {
+            logger.error(error)
+            next(error)
+        }
+    },
+    forgotPassword:async (req,res,next) => {
+        try {
+            logger.debug("Hitted on forgot password")
+            const {email}=req.user;
+
+            const isUser=await getUser(email)
+
+            if(!isUser.success){
+                return successResponse(STATUS_CODES.OK,{},"Reset link sent to registered email.",res)
+            }
+
+            const token=getRandomToken()
+            const hashedToken=getHashed(token)
+
+            await updateUser(req.user.userId,{resetPassword:{
+                tokenHash:hashedToken,
+                expiresAt:Date.now() + 15 * 60 * 1000
+            }})
+
+            const resetLink=`${process.env.FRONTEND_URL}/reset-password/${token}`;
+
+            await emailQueue.add("sendEmailResetLink",{email,resetLink})
+
+            return successResponse(STATUS_CODES.OK,{},"Reset link sent to  registered email.",res)
 
         } catch (error) {
             logger.error(error)

@@ -13,7 +13,7 @@ async function createAccessToken(data){
         logger.debug(`data comes in the create access token function : ${data._id}`)
         const accessJti = uuidv4();
 
-        const accessToken=jwt.sign({userId:data._id,role:data.role[0],fullname:data.fullname,email:data.email},process.env.ACCESS_TOKEN_SECRET,
+        const accessToken=jwt.sign({userId:data._id,role:data.role,fullname:data.fullname,email:data.email},process.env.ACCESS_TOKEN_SECRET,
             {jwtid:accessJti,expiresIn:process.env.ACCESS_TOKEN_EXPIRY}
         )
 
@@ -27,7 +27,7 @@ async function createRefreshToken(data){
     try {
         const refreshJti = uuidv4();
 
-        const refreshToken=jwt.sign({userId:data._id,role:data.role[0],fullname:data.fullname,email:data.email},process.env.REFRESH_TOKEN_SECRET,{
+        const refreshToken=jwt.sign({userId:data._id,role:data.role,fullname:data.fullname,email:data.email},process.env.REFRESH_TOKEN_SECRET,{
             jwtid:refreshJti,expiresIn:process.env.REFRESH_TOKEN_EXPIRY
         })
 

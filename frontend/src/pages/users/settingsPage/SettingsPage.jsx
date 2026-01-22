@@ -12,6 +12,7 @@ import uploadAvathar from "../../../services/uploadAvatar";
 import Spinner from "../../../components/Spinner/Spinner";
 import AvatarUploadingPreview from "../../../components/ImagePreview/AvatharImagePreview";
 import removeAvatar from "../../../services/handleRemoveAvatar";
+import forgotPassword from "../../../services/forgotPassword";
 const ImageCropper=lazy(()=>
     import ("../../../components/Cropper/ImageCropper")
 )
@@ -30,6 +31,7 @@ export default function Settings() {
   const fileInputRef = useRef(null);
   const [selectedImage, setSelectedImage] = useState(null);
   const [isDeleteAvatar,setIsDeleteAvatar]=useState(false)
+  const [error,setError]=useState({emailError:null,passwordError:null})
 
   const navigate=useNavigate( )
   console.log("issss: ",isConfirmed)
@@ -88,9 +90,27 @@ export default function Settings() {
 
 
 
+const handleEmailValidation=(email)=>{
+  
+  if(!email.trim()){
+    setError({emailError:"Email is required!!"})
+    return
+  }
+
+  if( ! /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+    setError({emailError:"Enter a valid email!!"})
+    return
+  }
+
+  setIsConfirmed(true)
+
+}
+
+
 const handleEditEmail=async()=>{
   console.log("pressed handle email functoin")
   console.log("email is : ",email)
+
   try {
     const res = await updateEmail({email}) 
     console.log("response in the handle edit email : ",res)
@@ -101,6 +121,21 @@ const handleEditEmail=async()=>{
       navigate("/signin")
     }else{
       toast.error(res.message)
+    }
+  } catch (error) {
+    log.error(error)
+  }
+}
+
+
+const handleForgotPassword=async()=>{
+  try {
+    console.log("called...")
+    const response=await forgotPassword()
+    if(response.success){
+      toast.success(response.message)
+    }else{
+      toast.error(response.message)
     }
   } catch (error) {
     log.error(error)
@@ -273,14 +308,16 @@ const handleRemoveAvatar =async()=>{
       />
 
       <button
-       onClick={()=>setIsConfirmed(true)} 
+       onClick={()=>handleEmailValidation(email)} 
         type="button"
         className="ml-3 text-blue-600 hover:underline text-sm font-medium whitespace-nowrap"
         title="Save"
       >
         Save
       </button>
+      
     </div>
+          <p className="text-red-400 text-sm">{error.emailError}</p>
   </div>
 )}
 
@@ -316,21 +353,44 @@ const handleRemoveAvatar =async()=>{
           )}
 
           {/* Security */}
-          {activeTab === "security" && (
-            <div className="space-y-6">
-              <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
-                Security
-              </h2>
-              <input
-                type="password"
-                placeholder="New Password"
-                className="w-full px-3 py-2 border rounded-md dark:bg-gray-900 dark:border-gray-700 dark:text-white"
-              />
-              <button className="px-6 py-2 bg-blue-600 text-white rounded-md">
-                Change Password
-              </button>
-            </div>
-          )}
+         {activeTab === "security" && (
+  <div className="space-y-6">
+    <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
+      Security
+    </h2>
+
+    {/* Current Password */}
+    <input
+      type="password"
+      placeholder="Current Password"
+      className="w-full px-3 py-2 border rounded-md dark:bg-gray-900 dark:border-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none"
+    />
+
+    {/* New Password */}
+    <div className="space-y-1">
+      <input
+        type="password"
+        placeholder="New Password"
+        className="w-full px-3 py-2 border rounded-md dark:bg-gray-900 dark:border-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none"
+      />
+
+      {/* Forgot Password */}
+      <button
+      onClick={handleForgotPassword}
+        type="button"
+        className="text-sm text-blue-600 hover:underline font-medium"
+      >
+        Forgot password?
+      </button>
+    </div>
+
+    {/* Change Password Button */}
+    <button  className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-sm font-medium transition">
+      Change Password
+    </button>
+  </div>
+)}
+
 
           {/* Preferences */}
           {activeTab === "preferences" && (

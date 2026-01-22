@@ -27,8 +27,9 @@ const userProfileSchema=new Schema({
     isProfileCompleted:{
       type:Boolean,
       default:false
-    }
+    },
 
+    
 
 },{ timestamps: true })
 

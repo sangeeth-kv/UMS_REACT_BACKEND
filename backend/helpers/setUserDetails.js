@@ -8,7 +8,8 @@ const requiredFileds=[
     "_id",
     "avatar",
     "avatarThumbStatus",
-    "thumbnail"
+    "thumbnail",
+    "role"
 ]
 function setUserDetails(user){
     let userDetails={}

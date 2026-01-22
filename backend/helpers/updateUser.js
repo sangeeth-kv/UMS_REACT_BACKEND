@@ -44,6 +44,7 @@ const ALLOWED_FIELDS = [
   "isVerified",
   "avatar",
   "avatarThumbStatus",
+  "resetPassword"
 ];
 
 async function updateUser(userId, updates) {

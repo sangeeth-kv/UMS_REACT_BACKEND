@@ -7,7 +7,7 @@ const mapUserDetails = require("../mappers/userDetailsMapper");
 
 
 async function getUserDetails(userId){
-    const user=await UserModel.findById(userId).select("fullname phone email isBlocked isDeleted isVerified createdAt _id avatar avatarThumbStatus thumbnail")
+    const user=await UserModel.findById(userId).select("fullname phone email isBlocked isDeleted isVerified createdAt _id avatar avatarThumbStatus thumbnail role")
 
     if(!user){
         return {success:false, message:"User not found"}

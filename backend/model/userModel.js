@@ -7,8 +7,24 @@ const userSchema = new Schema(
     email: { type: String, required: true, unique: true, index: true },
     password: { type: String, required: true },
 
-    isBlocked: { type: Boolean, default: false },
-    isDeleted: { type: Boolean, default: false },
+    // isBlocked: { type: Boolean, default: false },
+    isBlocked: {
+      userIsBlocked: { type: Boolean, default: false },
+      reason: { type: String, default: null },
+      blockedBy: {
+        id: { type: Schema.Types.ObjectId, ref: "Admin", default: null }
+      }
+    },
+
+    isDeleted: {
+      userIsDeleted: { type: Boolean, default: false },
+      reason: { type: String, default: null },
+      deletedBy: {
+        id: { type: Schema.Types.ObjectId, default: null },
+        role: { type: String, enum: ["admin", "superadmin", "user"] }
+      }
+    },
+
     refreshToken: { type: String },
 
     isVerified: {
@@ -24,10 +40,10 @@ const userSchema = new Schema(
     },
 
     avatar: {
-      url: { type: String },
-      publicId: { type: String },
-      thumbnailUrl: { type: String },
-      thumbnailPublicId: { type: String }
+      url: { type: String ,default:null},
+      publicId: { type: String ,default:null},
+      thumbnailUrl: { type: String ,default:null},
+      thumbnailPublicId: { type: String ,default:null}
     },
 
     avatarThumbStatus: {
@@ -40,10 +56,21 @@ const userSchema = new Schema(
       type: Boolean,
       default: false
     },
+
     thumbnailAvatarPending: {
       type: Boolean,
       default: false
-    }
+    },
+
+    resetPassword: {
+      tokenHash: String,
+      expiresAt: {
+      type: Date,
+        index: { expires: "15m" }
+      }
+    },
+    
+
 
   },
   { timestamps: true }
