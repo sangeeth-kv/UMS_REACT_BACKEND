@@ -5,6 +5,7 @@ const cookieparser=require("cookie-parser")
 const cors=require("cors")
 const errorHandler=require("./Middlewares/ErrorHandler")
 const userRoutes=require("./routes/userRoutes")
+const adminRoutes=require("./routes/adminRoutes")
 const requestLogger=require("./loggers/requestLogger")
 
 
@@ -20,6 +21,7 @@ app.use(cookieparser())
 
 app.use(requestLogger)
 app.use("/",userRoutes)
+app.use("/admin",adminRoutes)
 
 app.use(errorHandler);
 

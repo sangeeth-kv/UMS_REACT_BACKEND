@@ -12,6 +12,11 @@ const updateUser = require("../../helpers/updateUser")
 const { uploadOriginalImageAndQueue } = require("../../services/imageUploadService")
 const STATUS_CODES=require("../../utils/statusCodes")
 const emailQueue = require("../../queues/emailQueue")
+const { hashPassword } = require("../../helpers/passwordHelper")
+const { getDecodedAccessToken } = require("../../utils/tokens")
+const { blacklist, checkIsblackListed } = require("../../helpers/redisHelper")
+const jwt = require("jsonwebtoken");
+
 
 
 const userController={
@@ -196,6 +201,56 @@ const userController={
 
             return successResponse(STATUS_CODES.OK,{},"Reset link sent to  registered email.",res)
 
+        } catch (error) {
+            logger.error(error)
+            next(error)
+        }
+    },
+    verifyForgotPassword:async (req,res,next) => {
+        try {
+            logger.debug("Hitted on verify forgot password controller")
+            console.log("User : ",req.user)
+            console.log("req body : ",req.body)
+            const {password}=req.body
+            const hashedPassword=await hashPassword(password)
+
+            const updatedUser=await updateUser(req.user._id,{
+                resetPassword:{
+                    tokenHash:undefined,
+                    expiresAt:undefined
+                },
+                password:hashedPassword
+            })
+
+            return successResponse(STATUS_CODES.OK,{},"Password updated successfully ! You may sign in again,",res)
+            
+        } catch (error) {
+            logger.error(error)
+            next(error)
+        }
+    },
+    logout:async (req,res,next) => {
+        try {
+            
+            logger.debug("Hitted on logout controller ")
+            const token=req.headers.authorization?.split(" ")[1];
+
+            if (token) {
+                const decoded = jwt.decode(token); // NO verify
+                if (decoded?.jti && decoded?.exp) {
+                    await blacklist(decoded.jti, decoded.exp);
+                }
+            }
+
+            
+
+            res.clearCookie("refreshToken",{
+                httpOnly:true,
+                sameSite:"strict",
+                secure:process.env.NODE_ENV==="development"? false : true,
+            })
+
+            return successResponse(STATUS_CODES.OK,{},"Logout successfully",res)
         } catch (error) {
             logger.error(error)
             next(error)

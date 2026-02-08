@@ -51,7 +51,7 @@ function UserSignin() {
         dispatch(setUser(response.data.user))
         dispatch(updateUser({isProfileCompleted:response.data.profile}))
         toast.success(response.message)
-        navigate("/dashboard")
+        navigate("/dashboard",{ replace: true })
       }else{
         if(response.errors){
           response.errors.forEach((err)=>{

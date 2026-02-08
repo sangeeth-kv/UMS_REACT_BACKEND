@@ -25,8 +25,6 @@ const userSchema = new Schema(
       }
     },
 
-    refreshToken: { type: String },
-
     isVerified: {
       type: String,
       enum: ["not_verified", "requested", "verified"],

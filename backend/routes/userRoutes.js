@@ -9,9 +9,11 @@ const tokenController=require("../controller/tokenController/tokenController")
 const verifyAccessToken = require("../Middlewares/verifyAccessToken")
 const userController = require("../controller/userController/userController")
 const ProfileDetailsValidator = require("../validators/profileDetailsValidator")
-const { default: profileDetailsSchema } = require("../../frontend/src/validation/schemas/profileDetailsSchema")
+// const { default: profileDetailsSchema } = require("../../frontend/src/validation/schemas/profileDetailsSchema")
 const otpController=require("../controller/userController/otpController")
 const upload=require("../config/multer")
+const forgotPasswordValidator = require("../validators/forgotPasswordValidator")
+const tokenValidate = require("../Middlewares/tokenValidate")
 
 router.post("/signup",authLimiter,SignupValidator,validate,authController.verifySignup)
 router.post("/signin",authLimiter,signinValidators,validate,authController.verifySignin)
@@ -27,5 +29,7 @@ router.post("/upload-avathar",verifyAccessToken,upload.single("avatar"),userCont
 router.post("/update-email",verifyAccessToken,userController.updateEmail)
 router.delete("/remove-avatar",verifyAccessToken,userController.deleteAvatar)
 router.get("/forgot-password",verifyAccessToken,userController.forgotPassword)
+router.post("/verify-forgot-password/:token",tokenValidate,forgotPasswordValidator,validate,userController.verifyForgotPassword)
+router.post("/logout",userController.logout)
 
 module.exports=router

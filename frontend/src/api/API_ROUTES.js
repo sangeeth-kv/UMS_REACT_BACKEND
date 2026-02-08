@@ -10,5 +10,9 @@ export const API_ROUTES={
     UPDATE_EMAIL:"/update-email",
     REMOVE_AVATAR:"/remove-avatar",
     FORGOT_PASSWORD:"/forgot-password",
+    VERIFY_FORGOT_PASSWORD:"/verify-forgot-password",
+    SIGNOUT:"/logout",
+    ADMIN_GETDASHBOARD:"/admin/dashboard",
+    
     
 }

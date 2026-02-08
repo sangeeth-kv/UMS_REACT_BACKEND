@@ -9,7 +9,9 @@ const requiredFileds=[
     "avatar",
     "avatarThumbStatus",
     "thumbnail",
-    "role"
+    "role",
+    "isBlocked",
+    "isDeleted",
 ]
 function setUserDetails(user){
     let userDetails={}

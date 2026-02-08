@@ -72,4 +72,17 @@ async function getTTL(userId) {
         logger.error(`error in the getOtp function : ${error}`)
     }
 }
-module.exports={getUserIdfromRedis,deleteUserIdfromRedis,addUserId,checkIsblackListed,setOtp,getOtp,deleteOtp,getTTL}
+
+async function blacklist(jwiti,exp) {
+    try {
+        const ttl = exp - Math.floor(Date.now() / 1000);
+         if (ttl > 0) {
+        await client.set(`blacklist:${jwiti}`,"true",
+            { EX: ttl }
+        );
+    }
+    } catch (error) {
+        logger.error(`error in the getOtp function : ${error}`)
+    }
+}
+module.exports={getUserIdfromRedis,deleteUserIdfromRedis,addUserId,checkIsblackListed,setOtp,getOtp,deleteOtp,getTTL,blacklist}

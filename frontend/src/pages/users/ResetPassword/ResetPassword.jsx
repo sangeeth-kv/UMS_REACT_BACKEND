@@ -1,44 +1,59 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Spinner from "../../../components/Spinner/Spinner";
+// import {useDispatch} from "react-redux";
+// import {clearAccessToken,clearUser} from "../../../store/authSlice";
+import  {useForm} from "react-hook-form";
+import { Eye, EyeOff, Form } from "lucide-react";
+import { yupResolver } from "@hookform/resolvers/yup";
+import toast from "react-hot-toast";
+import FormInputField from "../../../components/InputField/FormInputField";
+import { forgotPasswordSchema } from "../../../validation/schemas/forgotPasswordSchema";
+import verifyForgotPassword from "../../../services/verifyForgotPassword";
+// import logoutUser from "../../../services/logoutUser";
 
 function ResetPassword() {
     const { token } = useParams()
     const navigate = useNavigate();
 
-    const [password, setPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
+    // const dispatch=useDispatch()
+
+    const {register,handleSubmit,formState:{errors}}=useForm({resolver:yupResolver(forgotPasswordSchema)})
+    const [show, setShow] = useState(false);
+
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState("");
+
+
+    console.log("toke in : ",token)
 
 
 
     useEffect(() => {
     if (!token) {
-      navigate("/invalid-link");
+      navigate("/not-found");
     }
     }, [token, navigate]);
 
     
 
-    const handleSubmit=async (e) => {
-        e.preventDefault();
-        setError("");
-        if (password.length < 8) {
-            return setError("Password must be at least 8 characters");
-        }
-        if (password !== confirmPassword) {
-            return setError("Passwords do not match");
-        }
+    const onSubmit=async (data) => {
 
         try{
             setLoading(true)
-            // const response=await verifyResetPassword(password,confirmPassword)
-            // console.log("response data in handleSubmit : ",response)
+            console.log("data : ",data)
+            const response=await verifyForgotPassword(data,token)
+            console.log("response data in handleSubmit : ",response)
+            if(response.success){
+                toast.success(response.message)
+                navigate("/signin",{ replace: true })
+            }else{
+                toast.error(response.message)
+            }
 
         }catch(err){
             console.log(err)
-        }finally{
+        }
+        finally{
             setLoading(false)
         }
 
@@ -60,27 +75,26 @@ function ResetPassword() {
 
           <p className="text-sm text-center text-gray-500 dark:text-gray-400 mb-6">
             Enter your new password below
-          </p>
+          </p>  
 
-          {error && (
-            <div className="mb-4 text-sm text-red-600 bg-red-100 dark:bg-red-900/30 px-3 py-2 rounded">
-              {error}
-            </div>
-          )}
-
-          
-
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div>
               <label className="block text-sm mb-1 text-gray-700 dark:text-gray-300">
                 New Password
               </label>
-              <input
-                type="password"
-                className="w-full px-3 py-2 border rounded-md dark:bg-gray-900 dark:border-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Enter new password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+              <FormInputField 
+                title=""
+                register={register("password")}
+                error={errors.password?.message}
+                type={show ? "text" : "password"}
+                icon={
+                    <span
+                      onClick={() => setShow((show) => !show)}
+                      className="cursor-pointer"
+                    >
+                      {show ? <EyeOff size={20} /> : <Eye size={20} />}
+                    </span>
+                }
               />
             </div>
 
@@ -88,13 +102,21 @@ function ResetPassword() {
               <label className="block text-sm mb-1 text-gray-700 dark:text-gray-300">
                 Confirm Password
               </label>
-              <input
-                type="password"
-                className="w-full px-3 py-2 border rounded-md dark:bg-gray-900 dark:border-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Confirm new password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-              />
+              <FormInputField 
+                title=""
+                register={register("confirmPassword")}
+                error={errors.confirmPassword?.message}
+                type={show ? "text" : "password"}
+                icon={
+                    <span
+                      onClick={() => setShow((show) => !show)}
+                      className="cursor-pointer"
+                    >
+                      {show ? <EyeOff size={20} /> : <Eye size={20} />}
+                    </span>
+                }
+
+                />
             </div>
 
             <button

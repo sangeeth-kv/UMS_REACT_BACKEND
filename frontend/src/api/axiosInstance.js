@@ -131,6 +131,22 @@ axiosInstance.interceptors.response.use(
     //   window.location.href = "/signin";
     // }
 
+    const isAuthRoute =originalRequest.url?.includes("/signin") || originalRequest.url?.includes("/signup");
+    if (isAuthRoute) {
+      return Promise.reject(error);
+    }
+  
+
+    if (
+      error.response?.status === 401 &&
+      ["TOKEN_BLACKLISTED", "INVALID_TOKEN", "SESSION_REVOKED"].includes( error.response.data?.message)
+    ) {
+      store.dispatch(clearAccessToken());
+      store.dispatch(clearUser());
+      window.location.href = "/signin";
+      return Promise.reject(error);
+    }
+
     return Promise.reject(error);
   }
 );

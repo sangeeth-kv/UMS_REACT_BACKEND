@@ -13,6 +13,7 @@ import log from "./utils/logger"
 const DashBoard = lazy(()=>import("./pages/users/dashBoard/DashBoard"))
 const UserPage=lazy(()=>import ("./pages/users/usersPage/UsersPage"))
 const SettingsPage=lazy(()=>import("./pages/users/settingsPage/SettingsPage"))
+const ResetPassword=lazy(()=>import("./pages/users/ResetPassword/ResetPassword"))
 // import Headers from "./components/Header/Headers"
 import ProtectedRoute from "./components/ProtectedRoutes/ProtectedRoutes"
 import HomeRedirect from "./components/HomeRedirect/HomeRedirect"
@@ -24,7 +25,14 @@ import Spinner from "./components/Spinner/Spinner"
 const OtpPage=lazy(()=>import ("./pages/users/otpPage/OtpPage"))
 import Layout from "./components/Layout/Layout"
 import RoleProtectedRoutes from "./components/RoleProtectedRoutes/RoleProtectedRoutes"
-import ResetPassword from "./pages/users/ResetPassword/ResetPassword"
+// import ResetPassword from "./pages/users/ResetPassword/ResetPassword"
+import NotFoundPage from "./pages/404Page/404Page"
+import AuthInitializer from "./components/AuthInitializer/AuthInit"
+import AdminDashBoard from "./pages/admin/AdminDashBoard/AdminDashBoard"
+import AdminLoginPage from "./pages/admin/AdminLogin/AdminLoginPage"
+import AdminUsers from "./pages/admin/AdminUsers/AdminUsers"
+import AdminSettings from "./pages/admin/AdminSettings/AdminSettings"
+import AdminLayout from "./components/Layout/AdminLayout"
 
 
 
@@ -50,12 +58,19 @@ function App() {
 
           {/* {token && <Headers/>} */}
 
+          
+
+        <AuthInitializer>
+
         <Routes>
 
           <Route path="/" element={token ? <Navigate to="/dashboard" replace /> : <Navigate to="/signin" replace />} />
 
           <Route path="/signup" element={<PublicRoutes><UserSignup/></PublicRoutes>}/>
           <Route path="/signin" element={<PublicRoutes><UserSignin/></PublicRoutes>}/>
+
+          <Route path="/not-found" element={<NotFoundPage/>}/>
+
 
 
           <Route path="/dashboard"  element={
@@ -117,22 +132,35 @@ function App() {
           <Route path="/reset-password/:token" element={
             <ProtectedRoute>
               <Layout>
-                <ResetPassword/>
+                <Suspense fallback={<Spinner/>}>
+                  <ResetPassword/>
+                </Suspense>
               </Layout>
             </ProtectedRoute>
           }/>
 
 
-          <Route path="/admin/dashboard" element={
-            <ProtectedRoute>
-              <RoleProtectedRoutes allowedRoles={["admin"]}>
-                <div>Admin Dashboard</div>
-              </RoleProtectedRoutes>
-            </ProtectedRoute>
-          }/>
+
+
+          {/* /admin side */}
+
+          {/* Admin Public */}
+          <Route path="/admin/signin" element={<AdminLoginPage />} />
+
+          {/* Admin Protected */}
+          <Route element={<ProtectedRoute />}>
+        <Route element={<RoleProtectedRoutes allowedRoles={["admin"]} />}>
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route path="dashboard" element={<AdminDashBoard/>} />
+            <Route path="users" element={<AdminUsers/>} />
+            <Route path="settings" element={<p>settings page</p>} />
+          </Route>
+        </Route>
+      </Route>
 
           
         </Routes>
+        </AuthInitializer>
 
         {/* {token && <Footer/>} */}
 

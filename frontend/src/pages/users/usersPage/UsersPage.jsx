@@ -6,6 +6,8 @@ import SearchBar from "../../../components/SearchBar/SearchBar";
 import useDebounce from "../../../hooks/useDebounce";
 import EmptyState from "../../../components/EmptyState/EmptyState";
 import {useSelector} from "react-redux"
+import { DEBOUNCE_DELAY, USER_LIMIT } from "../../../constants/constants";
+
 
 
 
@@ -20,16 +22,15 @@ function UsersPage(){
     const [totalPage,setTotalPage]=useState(1)
     const [searchQuery,setSeachQuery]=useState("")
     const email=useSelector((state)=>state.auth.user.email)
-    const limit=5
     console.log("SeachQueury : ",searchQuery)
 
-    const debounceSearchQuery=useDebounce(searchQuery,500)
+    const debounceSearchQuery=useDebounce(searchQuery,DEBOUNCE_DELAY)
 console.log("debounce search query : ",debounceSearchQuery)
 
 
     useEffect( ()=>{
         
-        getAllUsers(page,limit,debounceSearchQuery)
+        getAllUsers(page,USER_LIMIT,debounceSearchQuery)
         .then((response)=>{
             console.log("response got in userpage : ",response)
             setUsers(response.data.users)

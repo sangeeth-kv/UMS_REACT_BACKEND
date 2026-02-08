@@ -18,14 +18,16 @@ async function verifyAccessToken(req,res,next){
 
         const decoded=getDecodedAccessToken(token)
 
-        logger.debug("after decoded  verify checks : ")
+        console.log("after decoded  verify checks : ",decoded)
 
         const jti = decoded.jti || decoded.jwtid;
 
-        const isBlacklisted=await checkIsblackListed(jti)
+        const isBlacklisted=await checkIsblackListed(decoded.jti)
+
+        console.log("isblacklisted : ",isBlacklisted)
 
         if(isBlacklisted){
-            return failerResponse(STATUS_CODES.UNAUTHORIZED,[],"Session expired, need to login again",res)
+            return failerResponse(STATUS_CODES.UNAUTHORIZED,[],"TOKEN_BLACKLISTED",res)
         }
 
         logger.debug("after isblaclisted exist checks : ")
