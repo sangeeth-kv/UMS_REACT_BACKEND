@@ -34,7 +34,7 @@ const ImageCropper=lazy(()=>
 
 function DashBoard(){
     const user=useSelector((state)=>state.auth.user)
-    const isProfileCompleted=useSelector((state)=>state.auth.user.isProfileCompleted)
+    const isProfileCompleted=useSelector((state)=>state.auth?.user?.isProfileCompleted)
     const [isMore,setIsMore]=useState(false)
     const [isAddDetails,setAddDetails]=useState(false)
     const [isEditDetails,setEditDetails]=useState(false)
@@ -207,11 +207,11 @@ function DashBoard(){
                 
             
 
-              {user.isVerified === "verified"? "User is verified by Admin": user.isVerified === "requested"? "Verification request sent": "User is not verified by Admin"}
+              {user?.isVerified === "verified"? "User is verified by Admin": user?.isVerified === "requested"? "Verification request sent": "User is not verified by Admin"}
             </p>
 
 
-                {user.isVerified === "not_verified" && (<Tooltip position="bottom" content="Request for user verification through email "><RequestButton title="Request Verification"/></Tooltip>)}
+                {user?.isVerified === "not_verified" && (<Tooltip position="bottom" content="Request for user verification through email "><RequestButton title="Request Verification"/></Tooltip>)}
 
             
         </div>

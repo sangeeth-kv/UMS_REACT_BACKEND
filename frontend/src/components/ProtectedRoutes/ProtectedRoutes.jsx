@@ -1,13 +1,17 @@
 import { Navigate,useNavigate, Outlet} from "react-router-dom";
-// import { useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 // import { useEffect, useState } from "react";
 // import { axiosRefresh } from "../../api/axiosInstance";
 // import { setAccessToken, setUser, updateUser } from "../../store/authSlice";
 import Spinner from "../Spinner/Spinner";
 
+
 export default function ProtectedRoute({ children }) {
-  // const token = useSelector((state) => state.auth.accessToken);
-  // // const user = useSelector((state) => state.auth.user);
+  const token = useSelector((state) => state.auth.accessToken);
+  const isAuthInitialized =useSelector((state)=>state.auth.isAuthInitialized)
+  console.log("is auth : ",isAuthInitialized)
+
+  // const user = useSelector((state) => state.auth.user);
   // const dispatch = useDispatch();
   // const navigate=useNavigate()
 
@@ -44,8 +48,11 @@ export default function ProtectedRoute({ children }) {
   // }, [token, dispatch,navigate]);
 
   // if (loading) return <Spinner/>;
+  if (!isAuthInitialized) {
+    return <Spinner />;
+  }
 
-  // if (!token) return <Navigate to="/signin" replace />;
+  if (!token) return <Navigate to="/signin" replace />;
 
   // return children;
 

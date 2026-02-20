@@ -12,7 +12,7 @@ const userSchema = new Schema(
       userIsBlocked: { type: Boolean, default: false },
       reason: { type: String, default: null },
       blockedBy: {
-        id: { type: Schema.Types.ObjectId, ref: "Admin", default: null }
+        id: { type: Schema.Types.ObjectId, ref: "User", default: null }
       }
     },
 

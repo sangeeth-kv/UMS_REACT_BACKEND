@@ -17,16 +17,17 @@ const tokenController={
         
             const refreshToken=req.cookies.refreshToken;
             
-            // logger.debug(`REFRESH TOKEN GOT IN THE COOKIES IN getAccessToken : ${refreshToken} `)
+            logger.debug(`REFRESH TOKEN GOT IN THE COOKIES IN getAccessToken : ${refreshToken} `)
+            console.log("refrsh token in getAccessToken: ",refreshToken)
             
             if(!refreshToken){
-                return failedResponse(STATUS_CODES.UNAUTHORIZED,[],"Session expired !",res)
+                return failedResponse(STATUS_CODES.UNAUTHORIZED,[],"SESSION_REVOKED",res)
             }
         
             const decode=verifyRefreshToken(refreshToken)
 
             if(!decode){
-                return failedResponse(STATUS_CODES.UNAUTHORIZED,[],"Session expired !",res)
+                return failedResponse(STATUS_CODES.UNAUTHORIZED,[],"SESSION_REVOKED",res)
             }
         
         
@@ -35,7 +36,7 @@ const tokenController={
             // logger.debug(`jwtit got in token Contoller : ${jwtit} `)
         
             if(!jwtit){
-                return failedResponse(STATUS_CODES.UNAUTHORIZED,[],"Session expired !",res)
+                return failedResponse(STATUS_CODES.UNAUTHORIZED,[],"SESSION_REVOKED",res)
             }
         
             const user=await getUser(decode.email)

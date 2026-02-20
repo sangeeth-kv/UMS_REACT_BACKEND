@@ -74,15 +74,15 @@ console.log("debounce search query : ",debounceSearchQuery)
       {/* Left section: Avatar + Info */}
       <div className="flex items-center gap-4">
         {/* Avatar */}
-        {user.avatarThumbStatus === "ready" && user.avatar.thumbnailUrl ? (
+        {user?.avatarThumbStatus === "ready" && user?.avatar?.thumbnailUrl ? (
           <img
-            src={user.avatar.thumbnailUrl}
+            src={user?.avatar?.thumbnailUrl}
             alt="avatar thumbnail"
             className="w-12 h-12 rounded-full object-cover"
           />
-        ) : user.avatar.url ? (
+        ) : user?.avatar?.url ? (
           <img
-            src={user.avatar.url}
+            src={user?.avatar?.url}
             alt="avatar"
             className="w-12 h-12 rounded-full object-cover"
           />

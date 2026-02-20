@@ -1,17 +1,30 @@
 import React,{useState} from 'react'
 import {useSelector} from 'react-redux'
-import {NavLink} from "react-router-dom";
+import {NavLink,useNavigate} from "react-router-dom";
 import ToggleButton from '../../features/toggleMode/toggleButton';
 import NotificationIcon from '../Buttons/NotifcationIconButton';
 import Tooltip from '../ToolTip/ToolTip';
+import logoutUser from '../../services/logoutUser';
+import {useDispatch} from "react-redux";
+import {clearAccessToken,clearUser} from "../../store/authSlice";
+
 
 export default function Headers() {
     const [open, setOpen] = useState(false);
     const mode=useSelector((state)=>state.toggle.mode)
 
+    const dispatch=useDispatch()
+    const navigate=useNavigate()
 
-    const onLogout=()=>{
+
+    const onLogout=async()=>{
         console.log("logout clicked")
+        const res=await logoutUser()
+        console.log(res)
+        dispatch(clearAccessToken())
+        dispatch(clearUser())
+        window.location.replace("/signin");
+
     }
 
   return (

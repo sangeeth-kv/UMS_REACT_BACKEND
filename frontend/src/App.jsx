@@ -41,6 +41,8 @@ function App() {
 
   const mode=useSelector((state)=>state.toggle.mode)
   const token=useSelector((state)=>state.auth.accessToken)
+  const isAuthInitialized = useSelector((state) => state.auth.isAuthInitialized);
+  const user = useSelector((state) => state.auth.user);
 
   log.debug("AccesssTOken : ",token)
 
@@ -64,7 +66,21 @@ function App() {
 
         <Routes>
 
-          <Route path="/" element={token ? <Navigate to="/dashboard" replace /> : <Navigate to="/signin" replace />} />
+          {/* <Route path="/" element={token ? <Navigate to="/dashboard" replace /> : <Navigate to="/signin" replace />} /> */}
+          <Route
+  path="/"
+  element={
+    !isAuthInitialized ? (
+      <Spinner />
+    ) : !user ? (
+      <Navigate to="/signin" replace />
+    ) : user.role === "admin" ? (
+      <Navigate to="/admin/dashboard" replace />
+    ) : (
+      <Navigate to="/dashboard" replace />
+    )
+  }
+/>
 
           <Route path="/signup" element={<PublicRoutes><UserSignup/></PublicRoutes>}/>
           <Route path="/signin" element={<PublicRoutes><UserSignin/></PublicRoutes>}/>

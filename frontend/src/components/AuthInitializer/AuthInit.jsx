@@ -26,6 +26,8 @@ export default function AuthInitializer({ children }) {
     async function initAuth() {
       try {
         const res = await axiosRefresh.get("/refresh");
+        console.log("called!!!")
+        console.log("res :  in refresh  : ",res)
         dispatch(setAccessToken(res.data.data.accessToken));
         dispatch(setUser(res.data.data.user));
         dispatch(updateUser({ isProfileCompleted: res.data.data.isProfileCompleted }));

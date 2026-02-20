@@ -13,6 +13,9 @@ export const API_ROUTES={
     VERIFY_FORGOT_PASSWORD:"/verify-forgot-password",
     SIGNOUT:"/logout",
     ADMIN_GETDASHBOARD:"/admin/dashboard",
+    ADMIN_TOGGLE_BLOCK:"/admin/toggle-block",
+    ADMIN_DELETE_USER:"/admin/delete-user"
+
     
     
 }
